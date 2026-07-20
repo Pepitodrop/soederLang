@@ -17,7 +17,9 @@ node --input-type=module -e '
   import { readFileSync, writeFileSync } from "node:fs";
   import { normalizeAliases } from "./src/aliases.js";
   const input = readFileSync(0, "utf8");
-  writeFileSync(process.argv[1], normalizeAliases(input));
+  const normalized = normalizeAliases(input)
+    .replace(/^(\s*PROGRAM-ID)\.\s+/gim, "$1 ");
+  writeFileSync(process.argv[1], normalized);
 ' "$TMP_SOURCE"
 
 exec "$CORE" < "$TMP_SOURCE"
