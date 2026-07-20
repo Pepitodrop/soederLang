@@ -1,18 +1,19 @@
 # SöderLang
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](CHANGELOG.md)
 [![Node](https://img.shields.io/badge/node-%3E%3D20-green.svg)](package.json)
 [![License](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
-**SöderLang 1.0.0** is a COBOL-inspired, Turing-complete programming language whose source reads like exaggerated fictional political speech associated with Markus Söder. It includes a tokenizer, parser, AST, bytecode compiler, stack virtual machine, CLI, browser runtime, backend HTTP runtime, and interactive playground.
+**SöderLang 1.1.0** is a COBOL-inspired, Turing-complete programming language whose source reads like exaggerated fictional political speech associated with Markus Söder. It includes a tokenizer, parser, AST, bytecode compiler, stack virtual machine, CLI, browser runtime, backend HTTP runtime, and interactive playground.
 
-> **Satire notice:** This project is fictional political satire. It is not affiliated with or endorsed by Markus Söder, the Bavarian State Government, the CSU, or any broadcaster. All speech aliases are invented parody constructs, not authentic quotations.
+> **Satire notice:** This project is fictional political satire. It is not affiliated with or endorsed by Markus Söder, the Bavarian State Government, the CSU, Bündnis 90/Die Grünen, or any broadcaster. All speech aliases are invented parody constructs, not authentic quotations. Political phrases are exaggerated satire and contain no threats or slurs.
 
 ## Highlights
 
 - Turing-complete language core with numbers, text, variables, arithmetic, comparisons, labels, jumps, and loops
 - Functions, recursion, call frames, heap allocation, reads, writes, and bounded runtime safeguards
-- 73 functional fictional speech aliases backed by one canonical registry
+- 100 functional fictional speech aliases backed by one canonical registry
+- Food-blogger, influencer, social-media, grill, meat, beer-garden, and political parody vocabulary
 - Browser DOM, events, state, storage, and fetch runtime through explicit host adapters
 - Backend GET/POST/PUT/PATCH/DELETE routes, named route parameters, middleware, request access, JSON/text responses, and body-size limits
 - Interactive playground with console output, AST, bytecode, and sandboxed frontend preview
@@ -63,16 +64,15 @@ IDENTIFICATION DIVISION.
 PROGRAM-ID. BAYERISCHE-REDE.
 DATA DIVISION.
 WORKING-STORAGE SECTION.
-01 UMFRAGE ZAHL WERT 0.
+01 LIKES ZAHL WERT 0.
 PROCEDURE DIVISION.
 BAYERN ZUERST.
-PACK MAS UMFRAGE AUF 1.
-WAHLKAMPF:
-  ICH SAGE GANZ KLAR UMFRAGE.
-  BAYERN BONUS 1 ZU UMFRAGE.
-  WENN DAS SO IST UMFRAGE KLEINER 4 WEITER GEHTS ZU WAHLKAMPF.
-  DAS MUSS MAN SAGEN "Mia san fertig".
-  FEIERABEND IN BAYERN.
+LINK IN DER BIO LIKES AUF 2.
+FOLLOWER BONUS 3 ZU LIKES.
+DOPPELTE BRATWURST LIKES MIT 2.
+DIE GRUENEN WIEDER 1 VON LIKES.
+FOODBLOGGER URTEIL LIKES.
+HANDY AUS ESSEN KOMMT.
 ```
 
 ## Complete meme alias reference
@@ -81,21 +81,21 @@ Aliases are case-insensitive, normalized outside quoted strings, and map to the 
 
 | Canonical construct | Fictional aliases |
 |---|---|
-| `SAG` | `JETZT MAL KLARTEXT`, `DAS MUSS MAN SAGEN`, `ICH SAGE GANZ KLAR`, `KLARE KANTE`, `MIA SAN AUSGABE` |
-| `SETZE` | `PACK MAS`, `JETZT WIRD GELIEFERT`, `BAYERN MACHT DAS`, `ORDNUNG MUSS SEIN`, `MACHEN STATT REDEN` |
-| `ADDIERE` | `MEHR DAVON`, `NOCH EINE SCHIPPE`, `BAYERN BONUS`, `DOPPELT HILFT`, `AUFWAERTS IMMER` |
-| `SUBTRAHIERE` | `WENIGER BERLIN`, `RUNTER DAMIT`, `SPAREN ABER RICHTIG`, `KEIN SCHNICKSCHNACK`, `ROTSTIFT RAUS` |
-| `MULTIPLIZIERE` | `BAYERN HOCH ZWEI`, `VOLLE KRAFT`, `MEHR MEHR MEHR`, `WACHSTUM TURBO`, `DOPPELTER DOPPEL-WUMMS` |
-| `DIVIDIERE` | `SAUBER AUFTEILEN`, `JEDER KRIEGT SEINS`, `FOEDERAL VERTEILEN`, `DURCH DIE MITTE`, `FAIRER ANTEIL` |
-| `SPRINGE` | `AUF GEHTS`, `AB NACH BAYERN`, `WEITER GEHTS`, `KEINE ZEIT VERLIEREN`, `SOFORT WEITER` |
-| `WENN` | `WENN DAS SO IST`, `FALLS BAYERN WILL`, `NUR WENN ES PASST`, `UNTER EINER BEDINGUNG`, `SCHAUN MER MAL OB` |
-| `GLEICH` | `GENAU SO`, `IDENTISCH BAYERISCH`, `DASSELBE IN GRUEN` |
-| `UNGLEICH` | `NICHT UNSER DING`, `GANZ WAS ANDERES`, `BERLIN IST ANDERS` |
+| `SAG` | `JETZT MAL KLARTEXT`, `DAS MUSS MAN SAGEN`, `ICH SAGE GANZ KLAR`, `KLARE KANTE`, `MIA SAN AUSGABE`, `FOODBLOGGER URTEIL`, `JETZT KOMMT DER GESCHMACKSTEST`, `AB IN DIE STORY`, `KAMERA LAEUFT`, `JETZT EIN REEL`, `SELFIE MIT ANSAGE` |
+| `SETZE` | `PACK MAS`, `JETZT WIRD GELIEFERT`, `BAYERN MACHT DAS`, `ORDNUNG MUSS SEIN`, `MACHEN STATT REDEN`, `LINK IN DER BIO`, `CONTENT PLAN STEHT`, `GRILL IST AN`, `TELLER WIRD ANGERICHTET` |
+| `ADDIERE` | `MEHR DAVON`, `NOCH EINE SCHIPPE`, `BAYERN BONUS`, `DOPPELT HILFT`, `AUFWAERTS IMMER`, `MEHR FLEISCH`, `SCHWEINEBRATEN BONUS`, `FOLLOWER BONUS`, `NOCH EINE BRATWURST` |
+| `SUBTRAHIERE` | `WENIGER BERLIN`, `RUNTER DAMIT`, `SPAREN ABER RICHTIG`, `KEIN SCHNICKSCHNACK`, `ROTSTIFT RAUS`, `WENIGER GRUEN`, `DIE GRUENEN WIEDER`, `GRUENEN CHECK NICHT BESTANDEN` |
+| `MULTIPLIZIERE` | `BAYERN HOCH ZWEI`, `VOLLE KRAFT`, `MEHR MEHR MEHR`, `WACHSTUM TURBO`, `DOPPELTER DOPPEL-WUMMS`, `DOPPELTE BRATWURST`, `LIKES MAL LIKES`, `CONTENT OFFENSIVE` |
+| `DIVIDIERE` | `SAUBER AUFTEILEN`, `JEDER KRIEGT SEINS`, `FOEDERAL VERTEILEN`, `DURCH DIE MITTE`, `FAIRER ANTEIL`, `TELLER GERECHT TEILEN` |
+| `SPRINGE` | `AUF GEHTS`, `AB NACH BAYERN`, `WEITER GEHTS`, `KEINE ZEIT VERLIEREN`, `SOFORT WEITER`, `NAECHSTER DREHORT`, `AB ZUM BIERGARTEN` |
+| `WENN` | `WENN DAS SO IST`, `FALLS BAYERN WILL`, `NUR WENN ES PASST`, `UNTER EINER BEDINGUNG`, `SCHAUN MER MAL OB`, `WENN DER GESCHMACK PASST` |
+| `GLEICH` | `GENAU SO`, `IDENTISCH BAYERISCH`, `DASSELBE IN GRUEN`, `GESCHMACKLICH IDENTISCH` |
+| `UNGLEICH` | `NICHT UNSER DING`, `GANZ WAS ANDERES`, `BERLIN IST ANDERS`, `NICHT MIT DEN GRUENEN` |
 | `KLEINER` | `KLEIN ABER FEIN`, `NOCH NICHT GENUG`, `UNTER BAYERISCHEM NIVEAU` |
 | `GROESSER` | `GROESSER DENKEN`, `BAYERN IST SPITZE`, `UEBER DEM DURCHSCHNITT` |
 | `RUF` | `RUF DEN MINISTER`, `HOL DIE STAATSKANZLEI`, `DIREKTER DRAHT` |
 | `ZURUECK` | `ZURUECK INS STUDIO`, `WIEDER ZUM ANFANG`, `AUFGABE ERLEDIGT` |
-| `STOPP` | `JETZT IST SCHLUSS`, `FEIERABEND IN BAYERN`, `DAS WARS` |
+| `STOPP` | `JETZT IST SCHLUSS`, `FEIERABEND IN BAYERN`, `DAS WARS`, `HANDY AUS ESSEN KOMMT` |
 | `HAUPTPROGRAMM` | `BAYERN ZUERST`, `DIE REGIERUNGSZENTRALE`, `HAUPTSACHE BAYERN` |
 | `RESERVIERE` | `RESERVIER DEN BIERGARTEN`, `MEHR PLATZ FUER BAYERN`, `SPEICHER OFFENSIVE` |
 | `SCHREIBE` | `SCHREIBS INS GRUNDSATZPROGRAMM`, `HALT DAS FEST`, `AKTENKUNDIG MACHEN` |
@@ -136,7 +136,7 @@ import { createBackend } from 'soeder-lang/backend';
 
 ## Stability
 
-Version `1.0.0` defines the stable core syntax, bytecode behavior, CLI, and public package exports. Compatible features may be added in minor releases. Breaking syntax, bytecode, or public runtime API changes require a new major version.
+Version `1.1.0` preserves the stable 1.0 core syntax, bytecode behavior, CLI, and public package exports while adding backward-compatible aliases. Breaking syntax, bytecode, or public runtime API changes require a new major version.
 
 ## License
 
