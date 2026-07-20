@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.0.0
+
+- Add the completed portable SöderLang core runtime implemented in GnuCOBOL.
+- Add numeric and text variables, assignment, arithmetic, output, labels, jumps, comparisons, and loops.
+- Add functions, nested calls, recursion, bounded call frames, heap allocation, checked heap reads and writes, and runtime limits.
+- Apply all 100 canonical parody aliases before GnuCOBOL execution.
+- Add compatibility normalization for stable `PROGRAM-ID. NAME.` source headers.
+- Replace placeholder API evaluation with real execution through the GnuCOBOL runtime.
+- Add a React and TypeScript interface, JSON CGI transport, Docker image, Docker Compose deployment, and Apache configuration.
+- Add shared JavaScript/GnuCOBOL conformance checks and dedicated compilation, runtime, alias, frontend, container, and live API smoke tests.
+- Retain the JavaScript implementation as the compatibility runtime for browser DOM and backend HTTP host-operation profiles.
+
 ## 1.1.0
 
 - Expand the fictional parody alias registry from 73 to 100 functional aliases.

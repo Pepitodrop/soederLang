@@ -1,66 +1,47 @@
 # SöderLang
 
-[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](CHANGELOG.md)
+[![GnuCOBOL](https://img.shields.io/badge/core-GnuCOBOL-005CA5.svg)](cobol/)
 [![Node](https://img.shields.io/badge/node-%3E%3D20-green.svg)](package.json)
 [![License](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
-**SöderLang 1.1.0** is the stable JavaScript-hosted release of a COBOL-inspired, Turing-complete programming language whose source reads like exaggerated fictional political speech associated with Markus Söder. It includes a tokenizer, parser, AST, bytecode compiler, stack virtual machine, CLI, browser runtime, backend HTTP runtime, and interactive playground.
+**SöderLang 2.0.0** is a COBOL-inspired, Turing-complete satirical programming language whose source reads like exaggerated fictional political speech associated with Markus Söder.
 
-The repository also contains a **COBOL-first v2 core runtime** implemented in GnuCOBOL. It supports variables, text and numbers, assignment, arithmetic, output, labels, jumps, comparisons, loops, functions, nested calls, recursion, heap allocation, checked heap reads and writes, and bounded execution. A thin launcher applies the canonical 100-alias registry and then passes normalized source to GnuCOBOL. A CGI transport exposes the runtime through JSON without implementing language execution itself.
+The portable language core is implemented in **GnuCOBOL** and supports variables, text and numbers, assignment, arithmetic, output, labels, jumps, comparisons, loops, functions, nested calls, recursion, heap allocation, checked memory access, and bounded execution. All 100 fictional speech aliases are normalized through one canonical registry before execution.
 
-> **Satire notice:** This project is fictional political satire. It is not affiliated with or endorsed by Markus Söder, the Bavarian State Government, the CSU, Bündnis 90/Die Grünen, or any broadcaster. All speech aliases are invented parody constructs, not authentic quotations. Political phrases are exaggerated satire and contain no threats or slurs.
+The repository also retains the JavaScript implementation as a compatibility runtime for the optional browser DOM and backend HTTP host-operation profiles.
 
-## SöderLang versus implementation languages
+> **Satire notice:** This project is fictional political satire. It is not affiliated with or endorsed by Markus Söder, the Bavarian State Government, the CSU, Bündnis 90/Die Grünen, or any broadcaster. All speech aliases are invented parody constructs, not authentic quotations.
 
-GitHub's language chart reports the languages used to implement the repository. Stable v1 is implemented in JavaScript. The v2 core execution engine is implemented in GnuCOBOL; React and TypeScript provide the browser interface, while small shell/CGI components provide process and JSON transport.
+## Features
 
-## Highlights
+- Turing-complete GnuCOBOL core
+- Numeric and text variables
+- Assignment and arithmetic
+- Output, labels, conditions, jumps, and loops
+- Functions, nested calls, and recursion
+- Heap allocation, reads, and writes
+- Runtime safeguards for instructions, call depth, and memory
+- 100 functional fictional parody aliases
+- JSON execution API backed by the real GnuCOBOL runtime
+- React and TypeScript browser interface
+- Docker and Docker Compose deployment
+- Shared JavaScript/GnuCOBOL conformance checks
+- Dedicated compiler, runtime, alias, frontend, container, and live API tests
 
-- Turing-complete language core with numbers, text, variables, arithmetic, comparisons, labels, jumps, and loops
-- Functions, recursion, call frames, heap allocation, reads, writes, and bounded runtime safeguards
-- 100 functional fictional speech aliases backed by one canonical registry
-- Food-blogger, influencer, social-media, grill, meat, beer-garden, and political parody vocabulary
-- Stable v1 browser DOM, events, state, storage, fetch, and backend HTTP profiles
-- Interactive browser playground
-- GnuCOBOL v2 core with shared conformance checks, JSON API transport, and containerized deployment
+## Quick start with Docker
 
-## Stable v1 installation
-
-```bash
-npm install
-npm test
-node src/cli.js run examples/meme-speech.soeder
-```
-
-## COBOL-first v2
-
-Local requirements:
-
-- GnuCOBOL
-- GNU Make
-- Node.js, used only by the canonical alias launcher and browser build
-
-Build and test the core runtime:
-
-```bash
-make -C cobol test
-chmod +x cobol/bin/soeder-v2
-printf 'SAG 42.\nSTOPP.\n' | cobol/bin/soeder-v2
-```
-
-Run the shared stable-v1/GnuCOBOL conformance gate:
-
-```bash
-npm run conformance:cobol
-```
-
-### One-command container deployment
+The simplest way to run SöderLang v2 is:
 
 ```bash
 docker compose up --build
 ```
 
-Open `http://localhost:8080`.
+Open:
+
+```text
+http://localhost:8080
+```
 
 The deployed API exposes:
 
@@ -69,7 +50,7 @@ GET  /api/health
 POST /api/execute
 ```
 
-Example request:
+Example execution request:
 
 ```bash
 curl -X POST \
@@ -78,9 +59,108 @@ curl -X POST \
   http://localhost:8080/api/execute
 ```
 
-The production image is compiled and smoke-tested in CI, including a live health request and real GnuCOBOL execution through `/api/execute`.
+## Local GnuCOBOL runtime
 
-## Stable v1 CLI
+Requirements:
+
+- GnuCOBOL
+- GNU Make
+- Node.js 20 or newer for alias normalization and supporting tooling
+
+Build and test:
+
+```bash
+make -C cobol test
+```
+
+Run source through the v2 launcher:
+
+```bash
+chmod +x cobol/bin/soeder-v2
+printf 'SAG 42.\nSTOPP.\n' | cobol/bin/soeder-v2
+```
+
+Run the shared conformance gate:
+
+```bash
+npm install
+npm run conformance:cobol
+```
+
+## Language example
+
+```text
+IDENTIFICATION DIVISION.
+PROGRAM-ID. BAYERISCHE-REDE.
+
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 LIKES ZAHL WERT 0.
+01 ADDRESS ZAHL WERT 0.
+01 RESULT ZAHL WERT 0.
+
+PROCEDURE DIVISION.
+FUNKTION ERHOEHE.
+ADDIERE 1 ZU LIKES.
+ZURUECK.
+
+HAUPTPROGRAMM.
+LOOP:
+RUF ERHOEHE AUF.
+WENN LIKES KLEINER 5 SPRINGE ZU LOOP.
+RESERVIERE 1 IN ADDRESS.
+SCHREIBE LIKES NACH SPEICHER ADDRESS.
+LIES SPEICHER ADDRESS IN RESULT.
+SAG RESULT.
+STOPP.
+```
+
+Aliases can replace canonical instructions. For example:
+
+```text
+FOODBLOGGER URTEIL RESULT.
+HANDY AUS ESSEN KOMMT.
+```
+
+## Runtime limits
+
+The GnuCOBOL core enforces bounded execution:
+
+- Maximum instructions: `100,000`
+- Maximum call depth: `100`
+- Maximum heap cells: `10,000`
+
+Invalid variables, labels, functions, types, memory addresses, allocations, returns, and division by zero produce runtime errors rather than unchecked behavior.
+
+## Architecture
+
+```text
+.soeder source
+    |
+    v
+canonical alias and header normalization
+    |
+    v
+GnuCOBOL interpreter
+    |
+    +--> CLI output
+    |
+    +--> CGI JSON transport --> React/TypeScript interface
+```
+
+The transport layer does not implement the language. Program execution remains owned by `cobol/bin/soeder-core`.
+
+## JavaScript compatibility runtime
+
+The original JavaScript tokenizer, parser, compiler, VM, CLI, playground, browser DOM profile, and backend HTTP profile remain available.
+
+```bash
+npm install
+npm test
+node src/cli.js run examples/meme-speech.soeder
+```
+
+CLI commands:
 
 ```bash
 soeder run file.soeder
@@ -90,51 +170,39 @@ soeder ast file.soeder
 soeder tokens file.soeder
 ```
 
-## Example
+The JavaScript runtime remains authoritative specifically for browser DOM and backend HTTP host-operation instructions. The portable computational language core is available through GnuCOBOL.
 
-```text
-IDENTIFICATION DIVISION.
-PROGRAM-ID. BAYERISCHE-REDE.
-DATA DIVISION.
-WORKING-STORAGE SECTION.
-01 LIKES ZAHL WERT 0.
-PROCEDURE DIVISION.
-BAYERN ZUERST.
-LINK IN DER BIO LIKES AUF 2.
-FOLLOWER BONUS 3 ZU LIKES.
-DOPPELTE BRATWURST 2 MIT LIKES.
-DIE GRUENEN WIEDER 1 VON LIKES.
-FOODBLOGGER URTEIL LIKES.
-HANDY AUS ESSEN KOMMT.
-```
+## Testing
 
-## Architecture
+The CI pipeline verifies:
 
-```text
-Stable v1:
-.soeder source -> JavaScript parser/compiler -> bytecode -> JavaScript VM
-
-COBOL-first v2 core:
-.soeder source -> canonical alias/header normalization -> GnuCOBOL interpreter
-React UI -> CGI JSON transport -> GnuCOBOL interpreter
-```
-
-Stable v1 remains the complete reference implementation for the browser and backend language profiles. The GnuCOBOL runtime currently targets the portable language core rather than the DOM and HTTP host-operation instructions.
+- JavaScript tests and examples
+- GnuCOBOL compilation
+- variables, arithmetic, conditions, jumps, and loops
+- functions, nested calls, and recursion
+- heap allocation and checked memory access
+- all canonical aliases
+- JavaScript/GnuCOBOL core conformance
+- React and TypeScript production build
+- production Docker image build
+- live `/api/health` and `/api/execute` container requests
 
 ## Documentation
 
-- [`SPEC.md`](SPEC.md) — stable v1 language and VM specification
-- [`docs/MEME-ALIASES.md`](docs/MEME-ALIASES.md) — canonical speech-alias profile
+- [`SPEC.md`](SPEC.md) — language and VM specification
+- [`docs/MEME-ALIASES.md`](docs/MEME-ALIASES.md) — canonical alias profile
 - [`docs/TURING-COMPLETENESS.md`](docs/TURING-COMPLETENESS.md) — computational construction
-- [`docs/WEB-PROFILES.md`](docs/WEB-PROFILES.md) — stable v1 browser and backend profiles
-- [`docs/COBOL-V2-ARCHITECTURE.md`](docs/COBOL-V2-ARCHITECTURE.md) — COBOL-first architecture and migration gates
+- [`docs/WEB-PROFILES.md`](docs/WEB-PROFILES.md) — browser and backend host profiles
+- [`docs/COBOL-V2-ARCHITECTURE.md`](docs/COBOL-V2-ARCHITECTURE.md) — GnuCOBOL architecture
 - [`SECURITY.md`](SECURITY.md) — security model and vulnerability reporting
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — contribution workflow
 - [`CHANGELOG.md`](CHANGELOG.md) — release history
 
-## Stability
+## Release status
 
-Version `1.1.0` remains the stable public release. The GnuCOBOL v2 core is feature-compatible with the portable core subset covered by its dedicated tests and shared conformance gate. Stable v1 remains authoritative for browser and backend host profiles until equivalent GnuCOBOL host adapters exist.
+**Version 2.0.0 is the stable release of the portable SöderLang core.**
+
+Browser DOM and backend HTTP host profiles remain optional JavaScript compatibility integrations and do not affect completion of the portable language core.
 
 ## License
 
