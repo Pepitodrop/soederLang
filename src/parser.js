@@ -1,4 +1,5 @@
 import { tokenize } from './tokenizer.js';
+import { normalizeAliases } from './aliases.js';
 
 function cleanLine(line) {
   return line.replace(/\*>.*$/, '').trim();
@@ -12,8 +13,9 @@ function parseValue(raw) {
 }
 
 export function parse(source) {
-  tokenize(source);
-  const lines = source.replace(/\r/g, '').split('\n');
+  const normalizedSource = normalizeAliases(source);
+  tokenize(normalizedSource);
+  const lines = normalizedSource.replace(/\r/g, '').split('\n');
   const program = { type: 'Program', name: null, data: [], body: [] };
   let division = null;
 
