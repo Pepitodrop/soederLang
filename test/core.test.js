@@ -25,10 +25,11 @@ test('parser builds a COBOL-inspired program AST', () => {
   assert.equal(program.name, 'TEST-PROGRAMM');
   assert.equal(program.data[0].name, 'ZAEHLER');
   assert.deepEqual(program.body.map((node) => node.type), [
-    'AddStatement',
+    'ArithmeticStatement',
     'PrintStatement',
     'StopStatement'
   ]);
+  assert.equal(program.body[0].operation, 'ADD');
 });
 
 test('parser rejects unknown instructions', () => {
