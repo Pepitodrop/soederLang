@@ -12,8 +12,7 @@ fi
 TMP_SOURCE="$(mktemp)"
 trap 'rm -f "$TMP_SOURCE"' EXIT
 
-# Alias normalization uses the repository's single canonical registry. The
-# normalized program is always executed by the GnuCOBOL runtime.
+cd "$ROOT_DIR"
 node --input-type=module -e '
   import { readFileSync, writeFileSync } from "node:fs";
   import { normalizeAliases } from "./src/aliases.js";
