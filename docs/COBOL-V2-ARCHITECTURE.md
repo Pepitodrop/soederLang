@@ -35,9 +35,20 @@ soeder-api.cob
 JSON response
 ```
 
-## Migration policy
+## Current merged foundation
 
-The existing JavaScript v1 implementation remains stable on `main` and in the v1.1.0 release while v2 is developed on `cobol-core-v2`.
+The first runnable vertical slice provides:
+
+- a GnuCOBOL CLI runtime supporting `SAG` and `STOPP`;
+- `GET /api/health` routing in the COBOL CGI program;
+- `POST /api/execute` accepting JSON and returning JSON output;
+- a React/TypeScript playground that delegates execution to the COBOL API;
+- CI that compiles and tests the COBOL runtime and builds the frontend;
+- pinned frontend dependency versions.
+
+This foundation is intentionally not yet feature-compatible with SöderLang v1.1.0. The stable JavaScript implementation remains available while the COBOL implementation grows incrementally.
+
+## Migration policy
 
 A v2 release is allowed only after:
 
@@ -53,29 +64,32 @@ A v2 release is allowed only after:
 
 - health endpoint
 - JSON execute endpoint
-- COBOL lexer/parser/compiler/VM modules
-- `SAG`, `SETZE`, integer arithmetic, and `STOPP`
+- COBOL lexer/parser/compiler/VM foundation
+- initial `SAG` and `STOPP` execution
 - React/TypeScript playground calling the COBOL API
 
-### Phase 2 — control flow
+### Phase 2 — language fundamentals
+
+- `SETZE`
+- integer arithmetic
+- text values
+- structured lexer, parser, AST and bytecode tables
+- shared conformance fixtures
+
+### Phase 3 — control flow and advanced runtime
 
 - labels and jumps
-- comparisons and conditionals
-- loops
-- bytecode diagnostics
-
-### Phase 3 — advanced runtime
-
+- comparisons, conditionals and loops
 - functions and recursion
 - heap allocation/read/write
-- runtime limits
-- structured errors with line numbers
+- runtime limits and structured diagnostics
 
 ### Phase 4 — web profiles
 
 - browser host operations exposed through explicit API commands
 - backend route declarations compiled by the COBOL core
 - conformance parity with the stable v1 specification
+- containerized deployment
 
 ## Main-focus rule
 
