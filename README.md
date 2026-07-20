@@ -6,7 +6,7 @@
 
 **SöderLang 1.1.0** is the stable JavaScript-hosted release of a COBOL-inspired, Turing-complete programming language whose source reads like exaggerated fictional political speech associated with Markus Söder. It includes a tokenizer, parser, AST, bytecode compiler, stack virtual machine, CLI, browser runtime, backend HTTP runtime, and interactive playground.
 
-A **COBOL-first v2 foundation** is now included in the repository. Its authoritative runtime is written in GnuCOBOL, while React and TypeScript are restricted to the browser interface. The initial v2 vertical slice supports `SAG` and `STOPP`, exposes COBOL-owned health and execution endpoints, and is validated by dedicated CI. It is not yet a replacement for the complete v1.1.0 implementation.
+A **COBOL-first v2 foundation** is included in the repository. Its authoritative runtime is written in GnuCOBOL, while React and TypeScript are restricted to the browser interface. The initial v2 vertical slice supports `SAG` and `STOPP`, exposes COBOL-owned health and execution endpoints, and is validated by dedicated CI. It is not yet a replacement for the complete v1.1.0 implementation.
 
 > **Satire notice:** This project is fictional political satire. It is not affiliated with or endorsed by Markus Söder, the Bavarian State Government, the CSU, Bündnis 90/Die Grünen, or any broadcaster. All speech aliases are invented parody constructs, not authentic quotations. Political phrases are exaggerated satire and contain no threats or slurs.
 
