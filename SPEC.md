@@ -1,6 +1,6 @@
 # SöderLang Language Specification
 
-Status: draft 0.3
+Status: draft 0.4
 
 ## Design
 
@@ -62,7 +62,7 @@ HAUPTPROGRAMM.
   RUF NAME AUF.
 ```
 
-`RUF` creates a call frame containing the return instruction pointer. `ZURUECK` removes that frame, enabling nested calls and recursion. Version 0.3 uses program-level variables; scoped parameters and locals are planned extensions.
+`RUF` creates a call frame containing the return instruction pointer. `ZURUECK` removes that frame, enabling nested calls and recursion. Version 0.4 uses program-level variables; scoped parameters and locals are planned extensions.
 
 ## Heap memory
 
@@ -71,6 +71,31 @@ HAUPTPROGRAMM.
 - `LIES SPEICHER address IN TARGET.` reads one cell.
 
 Addresses and allocation sizes are checked. The runtime applies a configurable heap-cell limit.
+
+## Speech alias normalization
+
+Version 0.4 defines a canonical registry of 73 fictional Söder-style aliases. Each alias maps to an existing canonical keyword before tokenization, so aliases receive exactly the same validation and runtime semantics as ordinary syntax.
+
+Normalization is:
+
+- case-insensitive;
+- longest-match-first;
+- performed independently on each source line;
+- disabled inside double-quoted string literals;
+- exposed through the public `normalizeAliases` and `SOEDER_ALIASES` APIs.
+
+Examples:
+
+- `ICH SAGE GANZ KLAR` → `SAG`
+- `PACK MAS` → `SETZE`
+- `BAYERN BONUS` → `ADDIERE`
+- `WENN DAS SO IST` → `WENN`
+- `WEITER GEHTS` → `SPRINGE`
+- `RUF DEN MINISTER` → `RUF`
+- `RESERVIER DEN BIERGARTEN` → `RESERVIERE`
+- `FEIERABEND IN BAYERN` → `STOPP`
+
+The complete normative list is in `docs/MEME-ALIASES.md`. All phrases are fictional parody constructs rather than claims of authentic quotations.
 
 ## Virtual machine
 
@@ -83,7 +108,3 @@ SöderLang can directly simulate a deterministic two-counter Minsky machine usin
 ## Planned web profiles
 
 `WEB-FRONTEND DIVISION` will expose sandboxed DOM construction, events, state, and fetch. `WEB-BACKEND DIVISION` will expose HTTP routes, request data, JSON responses, and server modules.
-
-## Satirical speech profile
-
-At least 50 documented Söder-style meme aliases will map to real compiler or runtime operations. They are fictional parody constructs, not claims of authentic quotations.
