@@ -36,7 +36,9 @@ Available statements:
 - `ANTWORTE JSON value.`
 - `ANTWORTE TEXT value.`
 
-`BackendRuntime.dispatch()` works without opening sockets. `createNodeHandler()` returns a standard Node HTTP request handler.
+`createBackend(program, { call })` accepts an asynchronous handler adapter. Every matched route invokes its declared handler before the route response statements execute. The adapter receives the request, route metadata, mutable request-local variables, and the runtime instance.
+
+`BackendRuntime.dispatch()` works without opening sockets. `createNodeHandler()` returns a standard Node HTTP request handler and converts uncaught handler, parsing, or dispatch errors into JSON HTTP 500 responses.
 
 ## Security model
 
