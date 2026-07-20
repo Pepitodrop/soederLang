@@ -1,7 +1,7 @@
 {
   "name": "soeder-lang",
-  "version": "1.1.0",
-  "description": "A COBOL-inspired Turing-complete satirical programming language with frontend and backend web runtimes.",
+  "version": "2.0.0",
+  "description": "A COBOL-inspired Turing-complete satirical programming language with a GnuCOBOL core, web runtimes, and containerized API.",
   "type": "module",
   "bin": {
     "soeder": "./src/cli.js"
@@ -38,6 +38,6 @@
     "url": "https://github.com/Pepitodrop/soederLang/issues"
   },
   "homepage": "https://github.com/Pepitodrop/soederLang#readme",
-  "keywords": ["programming-language", "compiler", "virtual-machine", "cobol", "satire"],
+  "keywords": ["programming-language", "compiler", "virtual-machine", "cobol", "gnucobol", "satire"],
   "license": "MIT"
 }
