@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.0
+
+- Expand the fictional parody alias registry from 73 to 100 functional aliases.
+- Add food-blogger, influencer, social-media, grill, meat, and beer-garden parody vocabulary.
+- Add combative but non-threatening political parody phrases involving the Greens.
+- Add execution tests covering the new alias categories.
+
 ## 1.0.0
 
 - Complete tokenizer, parser, AST, bytecode compiler, VM, CLI, functions, recursion, heap memory, and safeguards.
