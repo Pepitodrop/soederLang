@@ -2,11 +2,15 @@ name: COBOL v2
 
 on:
   push:
-    branches: [cobol-core-v2, cobol-v2-parity-phase1]
+    branches: [cobol-core-v2, cobol-v2-parity-phase1, cobol-v2-parity-phase4]
   pull_request:
     paths:
       - 'cobol/**'
       - 'frontend/**'
+      - 'src/aliases.js'
+      - 'Dockerfile'
+      - 'docker-compose.yml'
+      - 'deploy/**'
       - '.github/workflows/cobol-v2.yml'
 
 permissions:
@@ -22,6 +26,10 @@ jobs:
       - name: Compile and test COBOL runtime
         working-directory: cobol
         run: make test 2>&1 | tee build.log
+      - name: Test canonical alias launcher
+        run: |
+          chmod +x cobol/bin/soeder-v2
+          printf 'FOODBLOGGER URTEIL 42.\nHANDY AUS ESSEN KOMMT.\n' | cobol/bin/soeder-v2 | grep -F '42'
       - name: Upload COBOL diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -42,3 +50,10 @@ jobs:
       - name: Build React and TypeScript client
         working-directory: frontend
         run: npm run build
+
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build production container
+        run: docker build -t soederlang-v2 .
