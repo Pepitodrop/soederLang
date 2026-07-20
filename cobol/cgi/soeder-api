@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -u
+
+ROOT_DIR="${SOEDER_ROOT:-/opt/soederlang}"
+RUNTIME="$ROOT_DIR/cobol/bin/soeder-v2"
+METHOD="${REQUEST_METHOD:-GET}"
+PATH_VALUE="${PATH_INFO:-/api/health}"
+
+printf 'Content-Type: application/json\r\n'
+printf 'Access-Control-Allow-Origin: *\r\n'
+printf 'Access-Control-Allow-Headers: Content-Type\r\n'
+printf 'Access-Control-Allow-Methods: GET,POST,OPTIONS\r\n\r\n'
+
+if [[ "$METHOD" == "OPTIONS" ]]; then
+  printf '{"ok":true}\n'
+  exit 0
+fi
+
+if [[ "$METHOD" == "GET" && ( "$PATH_VALUE" == "/api/health" || "$PATH_VALUE" == "/health" || "$PATH_VALUE" == "/" ) ]]; then
+  printf '{"ok":true,"runtime":"GnuCOBOL","architecture":"cobol-first-v2","phase":"parity"}\n'
+  exit 0
+fi
+
+if [[ "$METHOD" != "POST" || ( "$PATH_VALUE" != "/api/execute" && "$PATH_VALUE" != "/execute" ) ]]; then
+  printf '{"ok":false,"error":"route not found"}\n'
+  exit 1
+fi
+
+BODY="$(cat)"
+SOURCE="$(printf '%s' "$BODY" | jq -er '.source | strings' 2>/dev/null)" || {
+  printf '{"ok":false,"error":"request body must contain a string field named source"}\n'
+  exit 1
+}
+
+OUT_FILE="$(mktemp)"
+ERR_FILE="$(mktemp)"
+trap 'rm -f "$OUT_FILE" "$ERR_FILE"' EXIT
+
+cd "$ROOT_DIR"
+if printf '%s' "$SOURCE" | "$RUNTIME" >"$OUT_FILE" 2>"$ERR_FILE"; then
+  jq -n \
+    --arg runtime "GnuCOBOL" \
+    --rawfile output "$OUT_FILE" \
+    '{ok:true,runtime:$runtime,output:($output | split("\n") | map(select(length > 0)))}'
+else
+  jq -n \
+    --arg runtime "GnuCOBOL" \
+    --rawfile error "$ERR_FILE" \
+    '{ok:false,runtime:$runtime,error:($error | sub("\n+$"; ""))}'
+  exit 1
+fi
