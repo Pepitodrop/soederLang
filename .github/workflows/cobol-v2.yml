@@ -1,0 +1,40 @@
+name: COBOL v2
+
+on:
+  push:
+    branches: [cobol-core-v2]
+  pull_request:
+    paths:
+      - 'cobol/**'
+      - 'frontend/**'
+      - '.github/workflows/cobol-v2.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  cobol:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install GnuCOBOL
+        run: sudo apt-get update && sudo apt-get install -y gnucobol
+      - name: Compile and test COBOL runtime
+        working-directory: cobol
+        run: make test
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm install --package-lock-only && npm ci
+      - name: Build React and TypeScript client
+        working-directory: frontend
+        run: npm run build
