@@ -35,7 +35,7 @@ soeder-api.cob
 JSON response
 ```
 
-## Current merged foundation
+## Current foundation
 
 The first runnable vertical slice provides:
 
