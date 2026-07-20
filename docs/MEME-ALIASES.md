@@ -1,8 +1,8 @@
 # SöderLang Speech Alias Profile
 
-Status: version 0.4
+Status: version 1.1
 
-All phrases below are fictional parody constructs. They are not presented as authentic Markus Söder quotations and do not imply endorsement or affiliation.
+All phrases below are fictional parody constructs. They are not presented as authentic Markus Söder quotations and do not imply endorsement or affiliation. Political phrases are intentionally exaggerated satire and contain no threats or slurs.
 
 Aliases are normalized outside string literals before tokenization. Every entry therefore invokes the same parser, compiler, validation, and runtime behavior as its canonical keyword.
 
@@ -13,6 +13,12 @@ Aliases are normalized outside string literals before tokenization. Every entry 
 - `ICH SAGE GANZ KLAR`
 - `KLARE KANTE`
 - `MIA SAN AUSGABE`
+- `FOODBLOGGER URTEIL`
+- `JETZT KOMMT DER GESCHMACKSTEST`
+- `AB IN DIE STORY`
+- `KAMERA LAEUFT`
+- `JETZT EIN REEL`
+- `SELFIE MIT ANSAGE`
 
 ## Assignment → `SETZE`
 
@@ -21,6 +27,10 @@ Aliases are normalized outside string literals before tokenization. Every entry 
 - `BAYERN MACHT DAS`
 - `ORDNUNG MUSS SEIN`
 - `MACHEN STATT REDEN`
+- `LINK IN DER BIO`
+- `CONTENT PLAN STEHT`
+- `GRILL IST AN`
+- `TELLER WIRD ANGERICHTET`
 
 ## Addition → `ADDIERE`
 
@@ -29,6 +39,10 @@ Aliases are normalized outside string literals before tokenization. Every entry 
 - `BAYERN BONUS`
 - `DOPPELT HILFT`
 - `AUFWAERTS IMMER`
+- `MEHR FLEISCH`
+- `SCHWEINEBRATEN BONUS`
+- `FOLLOWER BONUS`
+- `NOCH EINE BRATWURST`
 
 ## Subtraction → `SUBTRAHIERE`
 
@@ -37,6 +51,9 @@ Aliases are normalized outside string literals before tokenization. Every entry 
 - `SPAREN ABER RICHTIG`
 - `KEIN SCHNICKSCHNACK`
 - `ROTSTIFT RAUS`
+- `WENIGER GRUEN`
+- `DIE GRUENEN WIEDER`
+- `GRUENEN CHECK NICHT BESTANDEN`
 
 ## Multiplication → `MULTIPLIZIERE`
 
@@ -45,6 +62,9 @@ Aliases are normalized outside string literals before tokenization. Every entry 
 - `MEHR MEHR MEHR`
 - `WACHSTUM TURBO`
 - `DOPPELTER DOPPEL-WUMMS`
+- `DOPPELTE BRATWURST`
+- `LIKES MAL LIKES`
+- `CONTENT OFFENSIVE`
 
 ## Division → `DIVIDIERE`
 
@@ -53,6 +73,7 @@ Aliases are normalized outside string literals before tokenization. Every entry 
 - `FOEDERAL VERTEILEN`
 - `DURCH DIE MITTE`
 - `FAIRER ANTEIL`
+- `TELLER GERECHT TEILEN`
 
 ## Jump → `SPRINGE`
 
@@ -61,6 +82,8 @@ Aliases are normalized outside string literals before tokenization. Every entry 
 - `WEITER GEHTS`
 - `KEINE ZEIT VERLIEREN`
 - `SOFORT WEITER`
+- `NAECHSTER DREHORT`
+- `AB ZUM BIERGARTEN`
 
 ## Conditional → `WENN`
 
@@ -69,18 +92,21 @@ Aliases are normalized outside string literals before tokenization. Every entry 
 - `NUR WENN ES PASST`
 - `UNTER EINER BEDINGUNG`
 - `SCHAUN MER MAL OB`
+- `WENN DER GESCHMACK PASST`
 
 ## Equality → `GLEICH`
 
 - `GENAU SO`
 - `IDENTISCH BAYERISCH`
 - `DASSELBE IN GRUEN`
+- `GESCHMACKLICH IDENTISCH`
 
 ## Inequality → `UNGLEICH`
 
 - `NICHT UNSER DING`
 - `GANZ WAS ANDERES`
 - `BERLIN IST ANDERS`
+- `NICHT MIT DEN GRUENEN`
 
 ## Less-than → `KLEINER`
 
@@ -111,6 +137,7 @@ Aliases are normalized outside string literals before tokenization. Every entry 
 - `JETZT IST SCHLUSS`
 - `FEIERABEND IN BAYERN`
 - `DAS WARS`
+- `HANDY AUS ESSEN KOMMT`
 
 ## Main entry point → `HAUPTPROGRAMM`
 
@@ -140,12 +167,12 @@ Aliases are normalized outside string literals before tokenization. Every entry 
 
 ```text
 BAYERN ZUERST.
-PACK MAS UMFRAGE AUF 1.
-WAHLKAMPF:
-  ICH SAGE GANZ KLAR UMFRAGE.
-  BAYERN BONUS 1 ZU UMFRAGE.
-  WENN DAS SO IST UMFRAGE KLEINER 4 WEITER GEHTS ZU WAHLKAMPF.
-  FEIERABEND IN BAYERN.
+LINK IN DER BIO LIKES AUF 2.
+FOLLOWER BONUS 3 ZU LIKES.
+DOPPELTE BRATWURST LIKES MIT 2.
+DIE GRUENEN WIEDER 1 VON LIKES.
+FOODBLOGGER URTEIL LIKES.
+HANDY AUS ESSEN KOMMT.
 ```
 
-The registry is also exported as `SOEDER_ALIASES`, allowing tooling, editors, documentation generators, and playgrounds to consume the same authoritative data used by the parser.
+The registry is exported as `SOEDER_ALIASES`, allowing tooling, editors, documentation generators, and playgrounds to consume the same authoritative data used by the parser.
