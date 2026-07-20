@@ -24,6 +24,7 @@
     "ast": "node src/cli.js ast examples/hello.soeder",
     "test": "node --test",
     "ci": "npm test && npm run check && node src/cli.js run examples/meme-speech.soeder",
+    "conformance:cobol": "make -C cobol all && chmod +x cobol/bin/soeder-v2 && node scripts/check-cobol-conformance.mjs",
     "playground": "node scripts/serve-playground.js"
   },
   "engines": {
