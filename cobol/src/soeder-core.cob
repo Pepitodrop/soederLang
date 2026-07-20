@@ -14,9 +14,7 @@
 
        WORKING-STORAGE SECTION.
        01 WS-EOF                         PIC X VALUE "N".
-          88 END-OF-SOURCE               VALUE "Y".
        01 WS-HALTED                      PIC X VALUE "N".
-          88 VM-HALTED                   VALUE "Y".
        01 WS-LINE-NUMBER                 PIC 9(6) VALUE ZERO.
        01 WS-LINE                        PIC X(4096) VALUE SPACES.
        01 WS-LENGTH                      PIC 9(5) COMP VALUE ZERO.
@@ -25,19 +23,15 @@
        01 WS-T3                          PIC X(256) VALUE SPACES.
        01 WS-T4                          PIC X(256) VALUE SPACES.
        01 WS-T5                          PIC X(256) VALUE SPACES.
-       01 WS-T6                          PIC X(2048) VALUE SPACES.
+       01 WS-OPERATION                   PIC X(3) VALUE SPACES.
        01 WS-NAME                        PIC X(64) VALUE SPACES.
        01 WS-VALUE-TOKEN                 PIC X(2048) VALUE SPACES.
        01 WS-VALUE-TYPE                  PIC X VALUE SPACE.
-          88 VALUE-NUMBER                VALUE "N".
-          88 VALUE-TEXT                  VALUE "T".
        01 WS-NUMBER                      PIC S9(18) VALUE ZERO.
        01 WS-TEXT                        PIC X(2048) VALUE SPACES.
        01 WS-TARGET-INDEX                PIC 9(3) COMP VALUE ZERO.
-       01 WS-VALUE-INDEX                 PIC 9(3) COMP VALUE ZERO.
        01 WS-I                           PIC 9(3) COMP VALUE ZERO.
        01 WS-FOUND                       PIC X VALUE "N".
-          88 FOUND                       VALUE "Y".
        01 WS-ERROR                       PIC X(1024) VALUE SPACES.
        01 WS-DISPLAY-NUMBER              PIC -9(18) VALUE ZERO.
 
@@ -52,10 +46,10 @@
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
            OPEN INPUT SOURCE-STREAM
-           PERFORM UNTIL END-OF-SOURCE OR VM-HALTED
+           PERFORM UNTIL WS-EOF = "Y" OR WS-HALTED = "Y"
                READ SOURCE-STREAM
                    AT END
-                       SET END-OF-SOURCE TO TRUE
+                       MOVE "Y" TO WS-EOF
                    NOT AT END
                        ADD 1 TO WS-LINE-NUMBER
                        MOVE FUNCTION TRIM(SOURCE-LINE) TO WS-LINE
@@ -79,55 +73,86 @@
                END-IF
            END-IF
 
-           MOVE SPACES TO WS-T1 WS-T2 WS-T3 WS-T4 WS-T5 WS-T6
+           MOVE SPACES TO WS-T1 WS-T2 WS-T3 WS-T4 WS-T5
            UNSTRING WS-LINE DELIMITED BY ALL SPACES
-               INTO WS-T1 WS-T2 WS-T3 WS-T4 WS-T5 WS-T6
+               INTO WS-T1 WS-T2 WS-T3 WS-T4 WS-T5
            END-UNSTRING
            MOVE FUNCTION UPPER-CASE(WS-T1) TO WS-T1
            MOVE FUNCTION UPPER-CASE(WS-T2) TO WS-T2
            MOVE FUNCTION UPPER-CASE(WS-T3) TO WS-T3
            MOVE FUNCTION UPPER-CASE(WS-T4) TO WS-T4
-           MOVE FUNCTION UPPER-CASE(WS-T5) TO WS-T5
 
-           EVALUATE FUNCTION TRIM(WS-T1)
-               WHEN "IDENTIFICATION"
-               WHEN "PROGRAM-ID."
-               WHEN "PROGRAM-ID"
-               WHEN "DATA"
-               WHEN "WORKING-STORAGE"
-               WHEN "PROCEDURE"
-               WHEN "BAYERN"
-               WHEN "HAUPTPROGRAMM"
-                   CONTINUE
-               WHEN "01"
-                   PERFORM DECLARE-VARIABLE
-               WHEN "SETZE"
-                   PERFORM ASSIGN-VARIABLE
-               WHEN "ADDIERE"
-                   MOVE "ADD" TO WS-T6
-                   PERFORM ARITHMETIC-VARIABLE
-               WHEN "SUBTRAHIERE"
-                   MOVE "SUB" TO WS-T6
-                   PERFORM ARITHMETIC-VARIABLE
-               WHEN "MULTIPLIZIERE"
-                   MOVE "MUL" TO WS-T6
-                   PERFORM ARITHMETIC-VARIABLE
-               WHEN "DIVIDIERE"
-                   MOVE "DIV" TO WS-T6
-                   PERFORM ARITHMETIC-VARIABLE
-               WHEN "SAG"
-                   MOVE WS-T2 TO WS-VALUE-TOKEN
-                   PERFORM RESOLVE-VALUE
-                   IF NOT VM-HALTED
-                       PERFORM DISPLAY-VALUE
-                   END-IF
-               WHEN "STOPP"
-               WHEN "STOPP."
-               WHEN "HANDY"
-                   SET VM-HALTED TO TRUE
-               WHEN OTHER
-                   PERFORM SYNTAX-ERROR
-           END-EVALUATE.
+           IF FUNCTION TRIM(WS-T1) = "IDENTIFICATION"
+               EXIT PARAGRAPH
+           END-IF
+           IF FUNCTION TRIM(WS-T1) = "PROGRAM-ID"
+               EXIT PARAGRAPH
+           END-IF
+           IF FUNCTION TRIM(WS-T1) = "PROGRAM-ID."
+               EXIT PARAGRAPH
+           END-IF
+           IF FUNCTION TRIM(WS-T1) = "DATA"
+               EXIT PARAGRAPH
+           END-IF
+           IF FUNCTION TRIM(WS-T1) = "WORKING-STORAGE"
+               EXIT PARAGRAPH
+           END-IF
+           IF FUNCTION TRIM(WS-T1) = "PROCEDURE"
+               EXIT PARAGRAPH
+           END-IF
+           IF FUNCTION TRIM(WS-T1) = "BAYERN"
+               EXIT PARAGRAPH
+           END-IF
+           IF FUNCTION TRIM(WS-T1) = "HAUPTPROGRAMM"
+               EXIT PARAGRAPH
+           END-IF
+
+           IF FUNCTION TRIM(WS-T1) = "01"
+               PERFORM DECLARE-VARIABLE
+               EXIT PARAGRAPH
+           END-IF
+           IF FUNCTION TRIM(WS-T1) = "SETZE"
+               PERFORM ASSIGN-VARIABLE
+               EXIT PARAGRAPH
+           END-IF
+           IF FUNCTION TRIM(WS-T1) = "ADDIERE"
+               MOVE "ADD" TO WS-OPERATION
+               PERFORM ARITHMETIC-VARIABLE
+               EXIT PARAGRAPH
+           END-IF
+           IF FUNCTION TRIM(WS-T1) = "SUBTRAHIERE"
+               MOVE "SUB" TO WS-OPERATION
+               PERFORM ARITHMETIC-VARIABLE
+               EXIT PARAGRAPH
+           END-IF
+           IF FUNCTION TRIM(WS-T1) = "MULTIPLIZIERE"
+               MOVE "MUL" TO WS-OPERATION
+               PERFORM ARITHMETIC-VARIABLE
+               EXIT PARAGRAPH
+           END-IF
+           IF FUNCTION TRIM(WS-T1) = "DIVIDIERE"
+               MOVE "DIV" TO WS-OPERATION
+               PERFORM ARITHMETIC-VARIABLE
+               EXIT PARAGRAPH
+           END-IF
+           IF FUNCTION TRIM(WS-T1) = "SAG"
+               MOVE WS-T2 TO WS-VALUE-TOKEN
+               PERFORM RESOLVE-VALUE
+               IF WS-HALTED NOT = "Y"
+                   PERFORM DISPLAY-VALUE
+               END-IF
+               EXIT PARAGRAPH
+           END-IF
+           IF FUNCTION TRIM(WS-T1) = "STOPP"
+               MOVE "Y" TO WS-HALTED
+               EXIT PARAGRAPH
+           END-IF
+           IF FUNCTION TRIM(WS-T1) = "HANDY"
+               MOVE "Y" TO WS-HALTED
+               EXIT PARAGRAPH
+           END-IF
+
+           PERFORM SYNTAX-ERROR.
 
        DECLARE-VARIABLE.
            MOVE FUNCTION UPPER-CASE(FUNCTION TRIM(WS-T2)) TO WS-NAME
@@ -136,26 +161,26 @@
                EXIT PARAGRAPH
            END-IF
            PERFORM FIND-OR-CREATE-VARIABLE
-           IF VM-HALTED
+           IF WS-HALTED = "Y"
                EXIT PARAGRAPH
            END-IF
            IF FUNCTION TRIM(WS-T3) = "ZAHL"
                MOVE WS-T5 TO WS-VALUE-TOKEN
                PERFORM RESOLVE-NUMERIC-LITERAL
-               IF NOT VM-HALTED
+               IF WS-HALTED NOT = "Y"
                    MOVE "N" TO VAR-TYPE(WS-TARGET-INDEX)
                    MOVE WS-NUMBER TO VAR-NUMBER(WS-TARGET-INDEX)
                END-IF
-           ELSE
-               IF FUNCTION TRIM(WS-T3) = "TEXT"
-                   MOVE "T" TO VAR-TYPE(WS-TARGET-INDEX)
-                   MOVE FUNCTION TRIM(WS-T5) TO WS-TEXT
-                   PERFORM STRIP-QUOTES
-                   MOVE WS-TEXT TO VAR-TEXT(WS-TARGET-INDEX)
-               ELSE
-                   PERFORM SYNTAX-ERROR
-               END-IF
-           END-IF.
+               EXIT PARAGRAPH
+           END-IF
+           IF FUNCTION TRIM(WS-T3) = "TEXT"
+               MOVE "T" TO VAR-TYPE(WS-TARGET-INDEX)
+               MOVE FUNCTION TRIM(WS-T5) TO WS-TEXT
+               PERFORM STRIP-QUOTES
+               MOVE WS-TEXT TO VAR-TEXT(WS-TARGET-INDEX)
+               EXIT PARAGRAPH
+           END-IF
+           PERFORM SYNTAX-ERROR.
 
        ASSIGN-VARIABLE.
            MOVE FUNCTION UPPER-CASE(FUNCTION TRIM(WS-T2)) TO WS-NAME
@@ -164,20 +189,20 @@
                EXIT PARAGRAPH
            END-IF
            PERFORM FIND-VARIABLE
-           IF NOT FOUND
+           IF WS-FOUND NOT = "Y"
                PERFORM UNKNOWN-VARIABLE-ERROR
                EXIT PARAGRAPH
            END-IF
            MOVE WS-T4 TO WS-VALUE-TOKEN
            PERFORM RESOLVE-VALUE
-           IF VM-HALTED
+           IF WS-HALTED = "Y"
                EXIT PARAGRAPH
            END-IF
            IF VAR-TYPE(WS-TARGET-INDEX) NOT = WS-VALUE-TYPE
                PERFORM TYPE-ERROR
                EXIT PARAGRAPH
            END-IF
-           IF VALUE-NUMBER
+           IF WS-VALUE-TYPE = "N"
                MOVE WS-NUMBER TO VAR-NUMBER(WS-TARGET-INDEX)
            ELSE
                MOVE WS-TEXT TO VAR-TEXT(WS-TARGET-INDEX)
@@ -186,7 +211,7 @@
        ARITHMETIC-VARIABLE.
            MOVE FUNCTION UPPER-CASE(FUNCTION TRIM(WS-T4)) TO WS-NAME
            PERFORM FIND-VARIABLE
-           IF NOT FOUND
+           IF WS-FOUND NOT = "Y"
                PERFORM UNKNOWN-VARIABLE-ERROR
                EXIT PARAGRAPH
            END-IF
@@ -196,27 +221,32 @@
            END-IF
            MOVE WS-T2 TO WS-VALUE-TOKEN
            PERFORM RESOLVE-VALUE
-           IF VM-HALTED
+           IF WS-HALTED = "Y"
                EXIT PARAGRAPH
            END-IF
-           IF NOT VALUE-NUMBER
+           IF WS-VALUE-TYPE NOT = "N"
                PERFORM TYPE-ERROR
                EXIT PARAGRAPH
            END-IF
-           EVALUATE FUNCTION TRIM(WS-T6)
-               WHEN "ADD"
-                   ADD WS-NUMBER TO VAR-NUMBER(WS-TARGET-INDEX)
-               WHEN "SUB"
-                   SUBTRACT WS-NUMBER FROM VAR-NUMBER(WS-TARGET-INDEX)
-               WHEN "MUL"
-                   MULTIPLY WS-NUMBER BY VAR-NUMBER(WS-TARGET-INDEX)
-               WHEN "DIV"
-                   IF WS-NUMBER = ZERO
-                       PERFORM DIVISION-ZERO-ERROR
-                   ELSE
-                       DIVIDE WS-NUMBER INTO VAR-NUMBER(WS-TARGET-INDEX)
-                   END-IF
-           END-EVALUATE.
+           IF WS-OPERATION = "ADD"
+               ADD WS-NUMBER TO VAR-NUMBER(WS-TARGET-INDEX)
+               EXIT PARAGRAPH
+           END-IF
+           IF WS-OPERATION = "SUB"
+               SUBTRACT WS-NUMBER FROM VAR-NUMBER(WS-TARGET-INDEX)
+               EXIT PARAGRAPH
+           END-IF
+           IF WS-OPERATION = "MUL"
+               MULTIPLY WS-NUMBER BY VAR-NUMBER(WS-TARGET-INDEX)
+               EXIT PARAGRAPH
+           END-IF
+           IF WS-OPERATION = "DIV"
+               IF WS-NUMBER = ZERO
+                   PERFORM DIVISION-ZERO-ERROR
+               ELSE
+                   DIVIDE WS-NUMBER INTO VAR-NUMBER(WS-TARGET-INDEX)
+               END-IF
+           END-IF.
 
        RESOLVE-VALUE.
            MOVE SPACES TO WS-TEXT
@@ -228,32 +258,31 @@
                PERFORM STRIP-QUOTES
                EXIT PARAGRAPH
            END-IF
-
            MOVE FUNCTION UPPER-CASE(FUNCTION TRIM(WS-VALUE-TOKEN))
                TO WS-NAME
            PERFORM FIND-VARIABLE
-           IF FOUND
+           IF WS-FOUND = "Y"
                MOVE VAR-TYPE(WS-TARGET-INDEX) TO WS-VALUE-TYPE
-               IF VALUE-NUMBER
+               IF WS-VALUE-TYPE = "N"
                    MOVE VAR-NUMBER(WS-TARGET-INDEX) TO WS-NUMBER
                ELSE
                    MOVE VAR-TEXT(WS-TARGET-INDEX) TO WS-TEXT
                END-IF
                EXIT PARAGRAPH
            END-IF
-
            PERFORM RESOLVE-NUMERIC-LITERAL.
 
        RESOLVE-NUMERIC-LITERAL.
+           IF FUNCTION TEST-NUMVAL(FUNCTION TRIM(WS-VALUE-TOKEN)) NOT = 0
+               PERFORM INVALID-VALUE-ERROR
+               EXIT PARAGRAPH
+           END-IF
            MOVE "N" TO WS-VALUE-TYPE
            COMPUTE WS-NUMBER = FUNCTION NUMVAL(
-               FUNCTION TRIM(WS-VALUE-TOKEN))
-               ON SIZE ERROR
-                   PERFORM INVALID-VALUE-ERROR
-           END-COMPUTE.
+               FUNCTION TRIM(WS-VALUE-TOKEN)).
 
        DISPLAY-VALUE.
-           IF VALUE-NUMBER
+           IF WS-VALUE-TYPE = "N"
                MOVE WS-NUMBER TO WS-DISPLAY-NUMBER
                DISPLAY FUNCTION TRIM(WS-DISPLAY-NUMBER)
            ELSE
@@ -276,7 +305,7 @@
 
        FIND-OR-CREATE-VARIABLE.
            PERFORM FIND-VARIABLE
-           IF FOUND
+           IF WS-FOUND = "Y"
                EXIT PARAGRAPH
            END-IF
            PERFORM VARYING WS-I FROM 1 BY 1 UNTIL WS-I > 100
@@ -288,25 +317,26 @@
                    EXIT PERFORM
                END-IF
            END-PERFORM
-           IF NOT FOUND
+           IF WS-FOUND NOT = "Y"
                MOVE "Variablenspeicher ist voll" TO WS-ERROR
-               PERFORM RUNTIME-ERROR
+               PERFORM FAIL-WITH-ERROR
            END-IF.
 
        STRIP-QUOTES.
            MOVE FUNCTION LENGTH(FUNCTION TRIM(WS-TEXT)) TO WS-LENGTH
            IF WS-LENGTH >= 2
-               IF WS-TEXT(1:1) = '"' AND WS-TEXT(WS-LENGTH:1) = '"'
-                   MOVE SPACE TO WS-TEXT(1:1)
-                   MOVE SPACE TO WS-TEXT(WS-LENGTH:1)
-                   MOVE FUNCTION TRIM(WS-TEXT) TO WS-TEXT
+               IF WS-TEXT(1:1) = '"'
+                   IF WS-TEXT(WS-LENGTH:1) = '"'
+                       MOVE SPACE TO WS-TEXT(1:1)
+                       MOVE SPACE TO WS-TEXT(WS-LENGTH:1)
+                       MOVE FUNCTION TRIM(WS-TEXT) TO WS-TEXT
+                   END-IF
                END-IF
            END-IF.
 
        SYNTAX-ERROR.
            MOVE SPACES TO WS-ERROR
            STRING "Syntaxfehler in Zeile " WS-LINE-NUMBER
-               ": " FUNCTION TRIM(WS-LINE)
                INTO WS-ERROR
            END-STRING
            PERFORM FAIL-WITH-ERROR.
@@ -314,7 +344,6 @@
        UNKNOWN-VARIABLE-ERROR.
            MOVE SPACES TO WS-ERROR
            STRING "Unbekannte Variable in Zeile " WS-LINE-NUMBER
-               ": " FUNCTION TRIM(WS-NAME)
                INTO WS-ERROR
            END-STRING
            PERFORM FAIL-WITH-ERROR.
@@ -322,7 +351,6 @@
        INVALID-VALUE-ERROR.
            MOVE SPACES TO WS-ERROR
            STRING "Ungueltiger Wert in Zeile " WS-LINE-NUMBER
-               ": " FUNCTION TRIM(WS-VALUE-TOKEN)
                INTO WS-ERROR
            END-STRING
            PERFORM FAIL-WITH-ERROR.
@@ -339,12 +367,9 @@
            STRING "Division durch Null in Zeile " WS-LINE-NUMBER
                INTO WS-ERROR
            END-STRING
-           PERFORM RUNTIME-ERROR.
-
-       RUNTIME-ERROR.
            PERFORM FAIL-WITH-ERROR.
 
        FAIL-WITH-ERROR.
            DISPLAY FUNCTION TRIM(WS-ERROR) UPON STDERR
            MOVE 2 TO RETURN-CODE
-           SET VM-HALTED TO TRUE.
+           MOVE "Y" TO WS-HALTED.
