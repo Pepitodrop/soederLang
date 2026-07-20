@@ -8,6 +8,13 @@ type Health = {
   error?: string;
 };
 
+type ExecuteResponse = {
+  ok: boolean;
+  runtime?: string;
+  output?: string[];
+  error?: string;
+};
+
 const starter = `SAG 42.
 STOPP.
 `;
@@ -15,7 +22,8 @@ STOPP.
 export function App() {
   const [source, setSource] = useState(starter);
   const [status, setStatus] = useState<Health | null>(null);
-  const [output, setOutput] = useState('The COBOL execution endpoint is being connected.');
+  const [output, setOutput] = useState('Ready to execute through GnuCOBOL.');
+  const [running, setRunning] = useState(false);
 
   useEffect(() => {
     fetch('/api/health')
@@ -25,13 +33,20 @@ export function App() {
   }, []);
 
   async function run() {
-    const response = await fetch('/api/execute', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ source }),
-    });
-    const body = await response.json();
-    setOutput(JSON.stringify(body, null, 2));
+    setRunning(true);
+    try {
+      const response = await fetch('/api/execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ source }),
+      });
+      const body = (await response.json()) as ExecuteResponse;
+      setOutput(body.ok ? (body.output ?? []).join('\n') : body.error ?? 'Execution failed');
+    } catch (error) {
+      setOutput(error instanceof Error ? error.message : 'Execution failed');
+    } finally {
+      setRunning(false);
+    }
   }
 
   return (
@@ -52,11 +67,13 @@ export function App() {
           onChange={(event) => setSource(event.target.value)}
           spellCheck={false}
         />
-        <button type="button" onClick={run}>Run through GnuCOBOL</button>
+        <button type="button" onClick={run} disabled={running}>
+          {running ? 'Running…' : 'Run through GnuCOBOL'}
+        </button>
       </section>
 
       <section>
-        <h2>JSON response</h2>
+        <h2>Program output</h2>
         <pre>{output}</pre>
       </section>
     </main>
