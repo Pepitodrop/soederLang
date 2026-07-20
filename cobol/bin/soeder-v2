@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+CORE="${SOEDER_CORE_PATH:-$ROOT_DIR/cobol/bin/soeder-core}"
+
+if [[ ! -x "$CORE" ]]; then
+  echo "SöderLang COBOL core not found: $CORE" >&2
+  exit 127
+fi
+
+TMP_SOURCE="$(mktemp)"
+trap 'rm -f "$TMP_SOURCE"' EXIT
+
+# Alias normalization uses the repository's single canonical registry. The
+# normalized program is always executed by the GnuCOBOL runtime.
+node --input-type=module -e '
+  import { readFileSync, writeFileSync } from "node:fs";
+  import { normalizeAliases } from "./src/aliases.js";
+  const input = readFileSync(0, "utf8");
+  writeFileSync(process.argv[1], normalizeAliases(input));
+' "$TMP_SOURCE"
+
+exec "$CORE" < "$TMP_SOURCE"
