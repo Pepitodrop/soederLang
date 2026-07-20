@@ -1,16 +1,18 @@
 {
   "name": "soeder-lang",
-  "version": "0.4.0",
-  "description": "A COBOL-inspired Turing-complete satirical programming language with functional speech aliases.",
+  "version": "0.5.0",
+  "description": "A COBOL-inspired Turing-complete satirical programming language with frontend and backend web runtimes.",
   "type": "module",
   "bin": {
     "soeder": "./src/cli.js"
   },
   "exports": {
-    ".": "./src/index.js"
+    ".": "./src/index.js",
+    "./browser": "./src/web/browser-runtime.js",
+    "./backend": "./src/web/backend-runtime.js"
   },
   "scripts": {
-    "check": "node src/cli.js check examples/hello.soeder",
+    "check": "node src/cli.js check examples/hello.soeder && node src/cli.js check examples/fullstack.soeder",
     "ast": "node src/cli.js ast examples/hello.soeder",
     "test": "node --test",
     "ci": "npm test && npm run check && node src/cli.js run examples/meme-speech.soeder"
