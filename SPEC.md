@@ -1,6 +1,6 @@
 # SöderLang Language Specification
 
-Status: draft 0.4
+Status: stable 1.0
 
 ## Design
 
@@ -62,7 +62,7 @@ HAUPTPROGRAMM.
   RUF NAME AUF.
 ```
 
-`RUF` creates a call frame containing the return instruction pointer. `ZURUECK` removes that frame, enabling nested calls and recursion. Version 0.4 uses program-level variables; scoped parameters and locals are planned extensions.
+`RUF` creates a call frame containing the return instruction pointer. `ZURUECK` removes that frame, enabling nested calls and recursion. Version 1.0 uses program-level variables; function parameters and local lexical scopes are intentionally outside the stable 1.0 core.
 
 ## Heap memory
 
@@ -74,26 +74,9 @@ Addresses and allocation sizes are checked. The runtime applies a configurable h
 
 ## Speech alias normalization
 
-Version 0.4 defines a canonical registry of 73 fictional Söder-style aliases. Each alias maps to an existing canonical keyword before tokenization, so aliases receive exactly the same validation and runtime semantics as ordinary syntax.
+Version 1.0 defines a canonical registry of 73 fictional Söder-style aliases. Each alias maps to an existing canonical keyword before tokenization, so aliases receive exactly the same validation and runtime semantics as ordinary syntax.
 
-Normalization is:
-
-- case-insensitive;
-- longest-match-first;
-- performed independently on each source line;
-- disabled inside double-quoted string literals;
-- exposed through the public `normalizeAliases` and `SOEDER_ALIASES` APIs.
-
-Examples:
-
-- `ICH SAGE GANZ KLAR` → `SAG`
-- `PACK MAS` → `SETZE`
-- `BAYERN BONUS` → `ADDIERE`
-- `WENN DAS SO IST` → `WENN`
-- `WEITER GEHTS` → `SPRINGE`
-- `RUF DEN MINISTER` → `RUF`
-- `RESERVIER DEN BIERGARTEN` → `RESERVIERE`
-- `FEIERABEND IN BAYERN` → `STOPP`
+Normalization is case-insensitive, longest-match-first, line-based, disabled inside double-quoted strings, and exposed through `normalizeAliases` and `SOEDER_ALIASES`.
 
 The complete normative list is in `docs/MEME-ALIASES.md`. All phrases are fictional parody constructs rather than claims of authentic quotations.
 
@@ -105,6 +88,12 @@ The compiler emits stack bytecode with `PUSH`, `LOAD`, `STORE`, arithmetic, comp
 
 SöderLang can directly simulate a deterministic two-counter Minsky machine using integer variables, increment, decrement, zero testing, labelled jumps, and halt. See `docs/TURING-COMPLETENESS.md` for the finite translation. Runtime limits constrain physical executions but not the abstract language model.
 
-## Planned web profiles
+## Web profiles
 
-`WEB-FRONTEND DIVISION` will expose sandboxed DOM construction, events, state, and fetch. `WEB-BACKEND DIVISION` will expose HTTP routes, request data, JSON responses, and server modules.
+`WEB-FRONTEND DIVISION` provides DOM construction, text and attribute updates, append operations, event binding, state storage, and fetch through explicit host adapters.
+
+`WEB-BACKEND DIVISION` provides HTTP route blocks, request data access, status selection, and JSON or text responses. `BackendRuntime` additionally supports named route parameters, composable middleware, direct dispatch, a native Node handler, and configurable request-body limits.
+
+## Compatibility
+
+The syntax and exported runtime APIs described here form the stable 1.0 contract. Compatible additions may extend the language. Breaking syntax, bytecode, or public API changes require a new major version.
