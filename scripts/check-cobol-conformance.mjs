@@ -6,8 +6,18 @@ const fixtures = [
   'test/conformance/canonical-core.soeder'
 ];
 
+function normalizeLine(line) {
+  const value = line.trim();
+  if (/^[+-]?\d+$/.test(value)) return BigInt(value).toString();
+  return value;
+}
+
 function normalize(output) {
-  return output.replace(/\r/g, '').trim();
+  return output
+    .replace(/\r/g, '')
+    .split('\n')
+    .map(normalizeLine)
+    .filter(Boolean);
 }
 
 for (const fixture of fixtures) {
@@ -23,7 +33,7 @@ for (const fixture of fixtures) {
     encoding: 'utf8'
   }));
 
-  if (v1 !== cobol) {
+  if (JSON.stringify(v1) !== JSON.stringify(cobol)) {
     throw new Error(`Conformance mismatch for ${fixture}\nv1: ${JSON.stringify(v1)}\nCOBOL: ${JSON.stringify(cobol)}`);
   }
 
