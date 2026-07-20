@@ -3,8 +3,11 @@ export class SoederVM {
     this.program = program;
     this.variables = { ...program.variables };
     this.stack = [];
+    this.callStack = [];
+    this.heap = [];
     this.output = [];
     this.maxSteps = options.maxSteps ?? 100000;
+    this.maxHeap = options.maxHeap ?? 1000000;
     this.write = options.write ?? false;
     this.labels = new Map();
     program.instructions.forEach((instruction, index) => {
@@ -20,6 +23,12 @@ export class SoederVM {
   jump(target, instruction) {
     if (!this.labels.has(target)) throw new Error(`Unbekanntes Sprungziel ${target} in Zeile ${instruction.line}`);
     return this.labels.get(target);
+  }
+
+  requireAddress(address, instruction) {
+    if (!Number.isInteger(address) || address < 0 || address >= this.heap.length) {
+      throw new Error(`Ungültige Speicheradresse ${address} in Zeile ${instruction.line}`);
+    }
   }
 
   run() {
@@ -58,6 +67,36 @@ export class SoederVM {
         case 'GT': { const b = this.pop(instruction); const a = this.pop(instruction); this.stack.push(a > b ? 1 : 0); break; }
         case 'JMP': next = this.jump(instruction.target, instruction); break;
         case 'JNZ': if (this.pop(instruction) !== 0) next = this.jump(instruction.target, instruction); break;
+        case 'CALL':
+          this.callStack.push(ip + 1);
+          next = this.jump(instruction.target, instruction);
+          break;
+        case 'RET':
+          if (this.callStack.length === 0) throw new Error(`ZURUECK ohne aktiven Funktionsaufruf in Zeile ${instruction.line}`);
+          next = this.callStack.pop();
+          break;
+        case 'ALLOC': {
+          const size = this.pop(instruction);
+          if (!Number.isInteger(size) || size < 1) throw new Error(`Ungültige Speichergröße ${size} in Zeile ${instruction.line}`);
+          if (this.heap.length + size > this.maxHeap) throw new Error(`Speicherlimit von ${this.maxHeap} Zellen überschritten`);
+          const address = this.heap.length;
+          this.heap.push(...Array(size).fill(0));
+          this.stack.push(address);
+          break;
+        }
+        case 'HSTORE': {
+          const value = this.pop(instruction);
+          const address = this.pop(instruction);
+          this.requireAddress(address, instruction);
+          this.heap[address] = value;
+          break;
+        }
+        case 'HLOAD': {
+          const address = this.pop(instruction);
+          this.requireAddress(address, instruction);
+          this.stack.push(this.heap[address]);
+          break;
+        }
         case 'PRINT': {
           const value = String(this.pop(instruction));
           this.output.push(value);
@@ -70,7 +109,13 @@ export class SoederVM {
       ip = next;
     }
 
-    return { output: [...this.output], variables: { ...this.variables }, steps, halted };
+    return {
+      output: [...this.output],
+      variables: { ...this.variables },
+      heap: [...this.heap],
+      steps,
+      halted
+    };
   }
 }
 
