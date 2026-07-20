@@ -1,12 +1,12 @@
 # SöderLang
 
-**SöderLang** is a COBOL-inspired programming language whose source reads like an exaggerated fictional political speech associated with Markus Söder.
+**SöderLang** is a COBOL-inspired, Turing-complete programming language whose source reads like an exaggerated fictional political speech associated with Markus Söder.
 
 > **Satire notice:** This project is fictional political satire. It is not affiliated with or endorsed by Markus Söder, the Bavarian State Government, the CSU, or any broadcaster. Language constructs are parody, not authentic quotations.
 
 ## Current status
 
-The executable core now includes:
+The executable core includes:
 
 - COBOL-inspired divisions and `.soeder` files
 - tokenizer, parser, AST, and bytecode compiler
@@ -15,10 +15,10 @@ The executable core now includes:
 - assignment, arithmetic, comparisons, labels, jumps, and loops
 - functions, call frames, returns, and recursion
 - heap allocation plus validated reads and writes
-- console output and explicit termination
 - compile-time variable, label, and function validation
-- stack checks, division-by-zero errors, instruction limits, and heap limits
+- instruction, stack, division-by-zero, address, and heap safeguards
 - a documented two-counter-machine construction establishing Turing completeness
+- **73 functional Söder-style speech aliases** backed by one canonical registry
 - CLI, examples, tests, and GitHub Actions
 
 ## Run it
@@ -26,38 +26,29 @@ The executable core now includes:
 ```bash
 npm install
 npm test
-node src/cli.js run examples/recursion-memory.soeder
+node src/cli.js run examples/meme-speech.soeder
 ```
 
-## Example
+## Speech-style example
 
 ```text
 IDENTIFICATION DIVISION.
-PROGRAM-ID. REKURSIVE-BAYERN-MASCHINE.
+PROGRAM-ID. BAYERISCHE-REDE.
 DATA DIVISION.
 WORKING-STORAGE SECTION.
-01 RUNDEN ZAHL WERT 3.
-01 ADRESSE ZAHL WERT 0.
-01 ERGEBNIS ZAHL WERT 0.
+01 UMFRAGE ZAHL WERT 0.
 PROCEDURE DIVISION.
-
-FUNKTION RUNTERZAEHLEN.
-  SAG RUNDEN.
-  SUBTRAHIERE 1 VON RUNDEN.
-  WENN RUNDEN GROESSER 0 SPRINGE ZU NOCHMAL.
-  ZURUECK.
-NOCHMAL:
-  RUF RUNTERZAEHLEN AUF.
-  ZURUECK.
-
-HAUPTPROGRAMM.
-  RUF RUNTERZAEHLEN AUF.
-  RESERVIERE 1 IN ADRESSE.
-  SCHREIBE 42 NACH SPEICHER ADRESSE.
-  LIES SPEICHER ADRESSE IN ERGEBNIS.
-  SAG ERGEBNIS.
-  STOPP.
+BAYERN ZUERST.
+PACK MAS UMFRAGE AUF 1.
+WAHLKAMPF:
+  ICH SAGE GANZ KLAR UMFRAGE.
+  BAYERN BONUS 1 ZU UMFRAGE.
+  WENN DAS SO IST UMFRAGE KLEINER 4 WEITER GEHTS ZU WAHLKAMPF.
+  DAS MUSS MAN SAGEN "Mia san fertig".
+  FEIERABEND IN BAYERN.
 ```
+
+This is executable syntax. For example, `ICH SAGE GANZ KLAR` maps to `SAG`, `BAYERN BONUS` maps to `ADDIERE`, and `FEIERABEND IN BAYERN` maps to `STOPP`. Aliases are normalized only outside quoted strings.
 
 ## CLI
 
@@ -69,6 +60,10 @@ soeder ast file.soeder
 soeder tokens file.soeder
 ```
 
-See [`docs/TURING-COMPLETENESS.md`](docs/TURING-COMPLETENESS.md) for the formal construction.
+## Documentation
 
-Next: 50+ functional Söder meme aliases, frontend/browser APIs, backend/HTTP APIs, and a playground.
+- [`SPEC.md`](SPEC.md) — language and VM specification
+- [`docs/MEME-ALIASES.md`](docs/MEME-ALIASES.md) — all functional speech aliases
+- [`docs/TURING-COMPLETENESS.md`](docs/TURING-COMPLETENESS.md) — formal computational construction
+
+Next: frontend/browser APIs, backend/HTTP APIs, a browser playground, packaging, and production hardening.
