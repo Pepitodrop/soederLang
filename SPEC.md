@@ -1,6 +1,6 @@
 # SöderLang Language Specification
 
-Status: draft 0.2
+Status: draft 0.3
 
 ## Design
 
@@ -46,18 +46,39 @@ Each statement updates `NAME`. Division by zero is a runtime error.
 - `STOPP.` terminates execution.
 - `LABEL:` declares a jump target.
 - `SPRINGE ZU LABEL.` performs an unconditional jump.
-- `WENN VARIABLE GLEICH value SPRINGE ZU LABEL.`
-- `WENN VARIABLE UNGLEICH value SPRINGE ZU LABEL.`
-- `WENN VARIABLE KLEINER value SPRINGE ZU LABEL.`
-- `WENN VARIABLE GROESSER value SPRINGE ZU LABEL.`
+- `WENN VARIABLE GLEICH|UNGLEICH|KLEINER|GROESSER value SPRINGE ZU LABEL.` performs a conditional jump.
 
 Variables and labels are validated before execution.
 
+## Functions
+
+Functions are declared before an explicit main-program marker:
+
+```text
+FUNKTION NAME.
+  *> function body
+  ZURUECK.
+HAUPTPROGRAMM.
+  RUF NAME AUF.
+```
+
+`RUF` creates a call frame containing the return instruction pointer. `ZURUECK` removes that frame, enabling nested calls and recursion. Version 0.3 uses program-level variables; scoped parameters and locals are planned extensions.
+
+## Heap memory
+
+- `RESERVIERE size IN ADDRESS-VARIABLE.` allocates zero-filled cells and stores their base address.
+- `SCHREIBE value NACH SPEICHER address.` writes one cell.
+- `LIES SPEICHER address IN TARGET.` reads one cell.
+
+Addresses and allocation sizes are checked. The runtime applies a configurable heap-cell limit.
+
 ## Virtual machine
 
-The compiler emits stack bytecode with `PUSH`, `LOAD`, `STORE`, arithmetic, comparison, `JMP`, `JNZ`, `PRINT`, and `HALT`. The VM preserves source lines, detects stack underflow, rejects invalid references, handles division by zero, and applies a configurable instruction limit.
+The compiler emits stack bytecode with `PUSH`, `LOAD`, `STORE`, arithmetic, comparison, `JMP`, `JNZ`, `CALL`, `RET`, `ALLOC`, `HLOAD`, `HSTORE`, `PRINT`, and `HALT`. The VM has separate operand and call stacks, preserves source lines, detects stack underflow, rejects invalid references, handles division by zero, and applies configurable instruction and heap limits.
 
-The current mutable-variable and control-flow primitives support arbitrary loops. Heap cells and functions will be added before the formal two-counter-machine proof of Turing completeness.
+## Turing completeness
+
+SöderLang can directly simulate a deterministic two-counter Minsky machine using integer variables, increment, decrement, zero testing, labelled jumps, and halt. See `docs/TURING-COMPLETENESS.md` for the finite translation. Runtime limits constrain physical executions but not the abstract language model.
 
 ## Planned web profiles
 
