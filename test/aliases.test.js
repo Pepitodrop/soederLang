@@ -5,8 +5,8 @@ import { parse } from '../src/parser.js';
 import { compile } from '../src/compiler.js';
 import { execute } from '../src/vm.js';
 
-test('ships at least fifty functional aliases', () => {
-  assert.ok(SOEDER_ALIASES.length >= 50);
+test('ships exactly one hundred functional aliases', () => {
+  assert.equal(SOEDER_ALIASES.length, 100);
   assert.equal(new Set(SOEDER_ALIASES.map(({ alias }) => alias)).size, SOEDER_ALIASES.length);
 });
 
@@ -34,6 +34,26 @@ JETZT IST SCHLUSS.`;
   const result = execute(compile(parse(source)));
   assert.deepEqual(result.output, ['1', '2', '3', 'JETZT IST SCHLUSS bleibt Text']);
   assert.equal(result.variables.ZAHLER, 4);
+});
+
+test('food blogger, influencer, meat, and political parody aliases execute', () => {
+  const source = `IDENTIFICATION DIVISION.
+PROGRAM-ID. CONTENT-DEMO.
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 LIKES ZAHL WERT 0.
+PROCEDURE DIVISION.
+BAYERN ZUERST.
+LINK IN DER BIO LIKES AUF 2.
+FOLLOWER BONUS 3 ZU LIKES.
+DOPPELTE BRATWURST LIKES MIT 2.
+DIE GRUENEN WIEDER 1 VON LIKES.
+FOODBLOGGER URTEIL LIKES.
+HANDY AUS ESSEN KOMMT.`;
+
+  const result = execute(compile(parse(source)));
+  assert.deepEqual(result.output, ['9']);
+  assert.equal(result.variables.LIKES, 9);
 });
 
 test('function and heap aliases compile to real operations', () => {
