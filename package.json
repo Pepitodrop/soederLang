@@ -1,6 +1,6 @@
 {
   "name": "soeder-lang",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "A COBOL-inspired Turing-complete satirical programming language with frontend and backend web runtimes.",
   "type": "module",
   "bin": {
@@ -11,14 +11,32 @@
     "./browser": "./src/web/browser-runtime.js",
     "./backend": "./src/web/backend-runtime.js"
   },
+  "files": [
+    "src",
+    "examples",
+    "docs",
+    "SPEC.md",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "check": "node src/cli.js check examples/hello.soeder && node src/cli.js check examples/fullstack.soeder",
     "ast": "node src/cli.js ast examples/hello.soeder",
     "test": "node --test",
-    "ci": "npm test && npm run check && node src/cli.js run examples/meme-speech.soeder"
+    "ci": "npm test && npm run check && node src/cli.js run examples/meme-speech.soeder",
+    "playground": "node scripts/serve-playground.js"
   },
   "engines": {
     "node": ">=20"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pepitodrop/soederLang.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Pepitodrop/soederLang/issues"
+  },
+  "homepage": "https://github.com/Pepitodrop/soederLang#readme",
+  "keywords": ["programming-language", "compiler", "virtual-machine", "cobol", "satire"],
   "license": "MIT"
 }
