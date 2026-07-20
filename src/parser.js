@@ -41,6 +41,23 @@ export function parse(source) {
     }
 
     if (division === 'PROCEDURE') {
+      match = line.match(/^FUNKTION\s+([A-Za-z][A-Za-z0-9-]*)\.$/i);
+      if (match) { program.body.push({ type: 'FunctionStatement', name: match[1], line: lineNumber }); continue; }
+      if (/^HAUPTPROGRAMM\.$/i.test(line)) { program.body.push({ type: 'MainStatement', line: lineNumber }); continue; }
+      if (/^ZURUECK\.$/i.test(line)) { program.body.push({ type: 'ReturnStatement', line: lineNumber }); continue; }
+
+      match = line.match(/^RUF\s+([A-Za-z][A-Za-z0-9-]*)\s+AUF\.$/i);
+      if (match) { program.body.push({ type: 'CallStatement', target: match[1], line: lineNumber }); continue; }
+
+      match = line.match(/^RESERVIERE\s+(.+)\s+IN\s+([A-Za-z][A-Za-z0-9-]*)\.$/i);
+      if (match) { program.body.push({ type: 'AllocateStatement', size: parseValue(match[1]), target: match[2], line: lineNumber }); continue; }
+
+      match = line.match(/^SCHREIBE\s+(.+)\s+NACH\s+SPEICHER\s+(.+)\.$/i);
+      if (match) { program.body.push({ type: 'HeapWriteStatement', value: parseValue(match[1]), address: parseValue(match[2]), line: lineNumber }); continue; }
+
+      match = line.match(/^LIES\s+SPEICHER\s+(.+)\s+IN\s+([A-Za-z][A-Za-z0-9-]*)\.$/i);
+      if (match) { program.body.push({ type: 'HeapReadStatement', address: parseValue(match[1]), target: match[2], line: lineNumber }); continue; }
+
       match = line.match(/^([A-Za-z][A-Za-z0-9-]*):$/);
       if (match) { program.body.push({ type: 'LabelStatement', name: match[1], line: lineNumber }); continue; }
 
