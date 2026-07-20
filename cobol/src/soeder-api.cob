@@ -29,28 +29,58 @@
            DISPLAY "Access-Control-Allow-Methods: GET,POST,OPTIONS"
            DISPLAY SPACE
 
-           EVALUATE TRUE
-               WHEN WS-METHOD-UPPER = "OPTIONS"
-                   DISPLAY '{"ok":true}'
-               WHEN WS-METHOD-UPPER = "GET"
-                   AND (WS-PATH-TRIMMED = "/api/health"
-                     OR WS-PATH-TRIMMED = "/health"
-                     OR WS-PATH-TRIMMED = SPACES)
-                   DISPLAY '{"ok":true,"runtime":"GnuCOBOL",'
-                       '"architecture":"cobol-first-v2",'
-                       '"phase":"vertical-slice"}'
-               WHEN WS-METHOD-UPPER = "POST"
-                   AND (WS-PATH-TRIMMED = "/api/execute"
-                     OR WS-PATH-TRIMMED = "/execute")
-                   PERFORM EXECUTE-REQUEST
-               WHEN OTHER
-                   DISPLAY '{"ok":false,"error":"route not found"}'
-                   MOVE 1 TO RETURN-CODE
-           END-EVALUATE
+           IF WS-METHOD-UPPER = "OPTIONS"
+               DISPLAY '{"ok":true}'
+           ELSE
+               IF WS-METHOD-UPPER = "GET"
+                   PERFORM HANDLE-GET
+               ELSE
+                   IF WS-METHOD-UPPER = "POST"
+                       PERFORM HANDLE-POST
+                   ELSE
+                       PERFORM NOT-FOUND
+                   END-IF
+               END-IF
+           END-IF
            GOBACK.
 
+       HANDLE-GET.
+           IF WS-PATH-TRIMMED = "/api/health"
+               PERFORM HEALTH-RESPONSE
+           ELSE
+               IF WS-PATH-TRIMMED = "/health"
+                   PERFORM HEALTH-RESPONSE
+               ELSE
+                   IF WS-PATH-TRIMMED = SPACES
+                       PERFORM HEALTH-RESPONSE
+                   ELSE
+                       PERFORM NOT-FOUND
+                   END-IF
+               END-IF
+           END-IF.
+
+       HANDLE-POST.
+           IF WS-PATH-TRIMMED = "/api/execute"
+               PERFORM EXECUTE-REQUEST
+           ELSE
+               IF WS-PATH-TRIMMED = "/execute"
+                   PERFORM EXECUTE-REQUEST
+               ELSE
+                   PERFORM NOT-FOUND
+               END-IF
+           END-IF.
+
+       HEALTH-RESPONSE.
+           DISPLAY '{"ok":true,"runtime":"GnuCOBOL",'
+               '"architecture":"cobol-first-v2",'
+               '"phase":"vertical-slice"}'.
+
+       NOT-FOUND.
+           DISPLAY '{"ok":false,"error":"route not found"}'
+           MOVE 1 TO RETURN-CODE.
+
        EXECUTE-REQUEST.
-           ACCEPT WS-BODY FROM SYSIN
+           ACCEPT WS-BODY
            MOVE FUNCTION INDEX(WS-BODY, '"source":"')
                TO WS-SOURCE-START
            IF WS-SOURCE-START = ZERO
