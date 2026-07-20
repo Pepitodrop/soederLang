@@ -1,49 +1,69 @@
 # SöderLang
 
-**SöderLang** is a planned COBOL-inspired, Turing-complete programming language whose source code reads like an exaggerated fictional speech by Markus Söder.
+**SöderLang** is a COBOL-inspired, Turing-complete programming language whose source reads like an exaggerated fictional political speech associated with Markus Söder.
 
-Its primary goal is to support both frontend and backend web development while remaining an intentionally absurd political satire language.
+> **Satire notice:** This project is fictional political satire. It is not affiliated with or endorsed by Markus Söder, the Bavarian State Government, the CSU, or any broadcaster. Language constructs are parody, not authentic quotations.
 
-> **Satire notice:** This project is fictional political satire. It is not affiliated with, endorsed by, or created by Markus Söder, the Bavarian State Government, the CSU, or any broadcaster. Meme phrases and language constructs are parody and must not be treated as authentic quotations.
+## Current status
 
-## Planned features
+The executable core includes:
 
-- COBOL-inspired divisions and verbose statement structure
-- Frontend browser APIs and DOM manipulation
-- Backend HTTP server and routing support
-- Variables, arithmetic, conditions, loops, functions, recursion, strings, and heap memory
-- At least 50 functional Söder meme aliases
-- A validated virtual machine and command-line interface
-- Turing-complete computation model
-- Browser playground and example full-stack applications
-- Automated tests and GitHub Actions
+- COBOL-inspired divisions and `.soeder` files
+- tokenizer, parser, AST, and bytecode compiler
+- stack-based virtual machine
+- numeric and text variables
+- assignment, arithmetic, comparisons, labels, jumps, and loops
+- functions, call frames, returns, and recursion
+- heap allocation plus validated reads and writes
+- compile-time variable, label, and function validation
+- instruction, stack, division-by-zero, address, and heap safeguards
+- a documented two-counter-machine construction establishing Turing completeness
+- **73 functional Söder-style speech aliases** backed by one canonical registry
+- CLI, examples, tests, and GitHub Actions
 
-## Example direction
+## Run it
+
+```bash
+npm install
+npm test
+node src/cli.js run examples/meme-speech.soeder
+```
+
+## Speech-style example
 
 ```text
 IDENTIFICATION DIVISION.
-PROGRAM-ID. BAYERN-ZAEHLER.
-
+PROGRAM-ID. BAYERISCHE-REDE.
 DATA DIVISION.
 WORKING-STORAGE SECTION.
-01 MASSKRUG PIC 9 VALUE 0.
-
+01 UMFRAGE ZAHL WERT 0.
 PROCEDURE DIVISION.
-HAUPTVERHANDLUNG.
-    DER MARKUS SAGT "Servus aus Bayern".
-    SOLANGE MASSKRUG KLEINER ALS 5
-        MASSKRUG WIRD MASSKRUG PLUS 1
-        BAVARIA ONE MELDET MASSKRUG
-    ENDE-SOLANGE.
-    JETZT WIRD REGIERT.
+BAYERN ZUERST.
+PACK MAS UMFRAGE AUF 1.
+WAHLKAMPF:
+  ICH SAGE GANZ KLAR UMFRAGE.
+  BAYERN BONUS 1 ZU UMFRAGE.
+  WENN DAS SO IST UMFRAGE KLEINER 4 WEITER GEHTS ZU WAHLKAMPF.
+  DAS MUSS MAN SAGEN "Mia san fertig".
+  FEIERABEND IN BAYERN.
 ```
 
-The final syntax and runtime semantics will be documented as the compiler is implemented.
+This is executable syntax. For example, `ICH SAGE GANZ KLAR` maps to `SAG`, `BAYERN BONUS` maps to `ADDIERE`, and `FEIERABEND IN BAYERN` maps to `STOPP`. Aliases are normalized only outside quoted strings.
 
-## Status
+## CLI
 
-Initial project setup. The compiler, runtime, web APIs, meme vocabulary, examples, tests, and documentation are under development.
+```bash
+soeder run file.soeder
+soeder compile file.soeder
+soeder check file.soeder
+soeder ast file.soeder
+soeder tokens file.soeder
+```
 
-## License
+## Documentation
 
-The project is intended to be released under the MIT License.
+- [`SPEC.md`](SPEC.md) — language and VM specification
+- [`docs/MEME-ALIASES.md`](docs/MEME-ALIASES.md) — all functional speech aliases
+- [`docs/TURING-COMPLETENESS.md`](docs/TURING-COMPLETENESS.md) — formal computational construction
+
+Next: frontend/browser APIs, backend/HTTP APIs, a browser playground, packaging, and production hardening.

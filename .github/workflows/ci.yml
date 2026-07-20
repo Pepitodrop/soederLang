@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm install --ignore-scripts
+      - name: Run tests
+        id: tests
+        shell: bash
+        continue-on-error: true
+        run: npm test > test-output.log 2>&1
+      - name: Upload test output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-output-node-${{ matrix.node-version }}
+          path: test-output.log
+      - name: Fail when tests failed
+        if: steps.tests.outcome == 'failure'
+        run: exit 1
+      - run: npm run check
