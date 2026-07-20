@@ -6,11 +6,8 @@
        01 WS-METHOD                    PIC X(16) VALUE SPACES.
        01 WS-PATH                      PIC X(256) VALUE SPACES.
        01 WS-BODY                      PIC X(8192) VALUE SPACES.
-       01 WS-SOURCE-START              PIC 9(5) COMP VALUE ZERO.
-       01 WS-SAG-POS                   PIC 9(5) COMP VALUE ZERO.
-       01 WS-VALUE-START               PIC 9(5) COMP VALUE ZERO.
-       01 WS-DOT-POS                   PIC 9(5) COMP VALUE ZERO.
-       01 WS-VALUE-LENGTH              PIC 9(5) COMP VALUE ZERO.
+       01 WS-PREFIX                    PIC X(8192) VALUE SPACES.
+       01 WS-AFTER-SAG                 PIC X(8192) VALUE SPACES.
        01 WS-VALUE                     PIC X(1024) VALUE SPACES.
        01 WS-METHOD-UPPER              PIC X(16) VALUE SPACES.
        01 WS-PATH-TRIMMED              PIC X(256) VALUE SPACES.
@@ -81,34 +78,29 @@
 
        EXECUTE-REQUEST.
            ACCEPT WS-BODY
-           MOVE FUNCTION INDEX(WS-BODY, '"source":"')
-               TO WS-SOURCE-START
-           IF WS-SOURCE-START = ZERO
-               DISPLAY '{"ok":false,"error":"JSON source field missing"}'
-               MOVE 1 TO RETURN-CODE
-               EXIT PARAGRAPH
-           END-IF
+           MOVE SPACES TO WS-PREFIX WS-AFTER-SAG WS-VALUE
+           UNSTRING WS-BODY
+               DELIMITED BY "SAG "
+               INTO WS-PREFIX WS-AFTER-SAG
+           END-UNSTRING
 
-           ADD 10 TO WS-SOURCE-START
-           MOVE FUNCTION INDEX(WS-BODY(WS-SOURCE-START:), "SAG ")
-               TO WS-SAG-POS
-           IF WS-SAG-POS = ZERO
+           IF WS-AFTER-SAG = SPACES
                DISPLAY '{"ok":false,"error":"vertical slice supports SAG and STOPP"}'
                MOVE 1 TO RETURN-CODE
                EXIT PARAGRAPH
            END-IF
 
-           COMPUTE WS-VALUE-START = WS-SOURCE-START + WS-SAG-POS + 3
-           MOVE FUNCTION INDEX(WS-BODY(WS-VALUE-START:), ".")
-               TO WS-DOT-POS
-           IF WS-DOT-POS = ZERO
-               DISPLAY '{"ok":false,"error":"SAG requires a terminating period"}'
+           UNSTRING WS-AFTER-SAG
+               DELIMITED BY "."
+               INTO WS-VALUE
+           END-UNSTRING
+
+           IF WS-VALUE = SPACES
+               DISPLAY '{"ok":false,"error":"SAG requires a value"}'
                MOVE 1 TO RETURN-CODE
                EXIT PARAGRAPH
            END-IF
 
-           COMPUTE WS-VALUE-LENGTH = WS-DOT-POS - 1
-           MOVE WS-BODY(WS-VALUE-START:WS-VALUE-LENGTH) TO WS-VALUE
            DISPLAY '{"ok":true,"runtime":"GnuCOBOL","output":["'
                FUNCTION TRIM(WS-VALUE) '"]}'
            MOVE ZERO TO RETURN-CODE.
