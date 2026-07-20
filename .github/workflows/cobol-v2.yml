@@ -2,7 +2,7 @@ name: COBOL v2
 
 on:
   push:
-    branches: [cobol-core-v2]
+    branches: [cobol-core-v2, cobol-v2-parity-phase1]
   pull_request:
     paths:
       - 'cobol/**'
@@ -21,7 +21,13 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y gnucobol
       - name: Compile and test COBOL runtime
         working-directory: cobol
-        run: make test
+        run: make test 2>&1 | tee build.log
+      - name: Upload COBOL diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cobol-build-log
+          path: cobol/build.log
 
   frontend:
     runs-on: ubuntu-latest
