@@ -6,24 +6,23 @@
 
 **SöderLang 1.1.0** is the stable JavaScript-hosted release of a COBOL-inspired, Turing-complete programming language whose source reads like exaggerated fictional political speech associated with Markus Söder. It includes a tokenizer, parser, AST, bytecode compiler, stack virtual machine, CLI, browser runtime, backend HTTP runtime, and interactive playground.
 
-A **COBOL-first v2 foundation** is included in the repository. Its authoritative runtime is written in GnuCOBOL, while React and TypeScript are restricted to the browser interface. The initial v2 vertical slice supports `SAG` and `STOPP`, exposes COBOL-owned health and execution endpoints, and is validated by dedicated CI. It is not yet a replacement for the complete v1.1.0 implementation.
+The repository also contains a **COBOL-first v2 core runtime** implemented in GnuCOBOL. It supports variables, text and numbers, assignment, arithmetic, output, labels, jumps, comparisons, loops, functions, nested calls, recursion, heap allocation, checked heap reads and writes, and bounded execution. A thin launcher applies the canonical 100-alias registry and then passes normalized source to GnuCOBOL. A CGI transport exposes the runtime through JSON without implementing language execution itself.
 
 > **Satire notice:** This project is fictional political satire. It is not affiliated with or endorsed by Markus Söder, the Bavarian State Government, the CSU, Bündnis 90/Die Grünen, or any broadcaster. All speech aliases are invented parody constructs, not authentic quotations. Political phrases are exaggerated satire and contain no threats or slurs.
 
 ## SöderLang versus implementation languages
 
-GitHub's language chart reports the languages used to implement the repository. The stable v1 compiler and VM are implemented in JavaScript. The v2 migration makes GnuCOBOL the authoritative language for lexer, parser, AST, bytecode compilation, VM execution, and REST/JSON processing. React and TypeScript remain only for presentation and HTTP communication.
+GitHub's language chart reports the languages used to implement the repository. Stable v1 is implemented in JavaScript. The v2 core execution engine is implemented in GnuCOBOL; React and TypeScript provide the browser interface, while small shell/CGI components provide process and JSON transport.
 
 ## Highlights
 
-- Turing-complete stable v1 language core with numbers, text, variables, arithmetic, comparisons, labels, jumps, and loops
+- Turing-complete language core with numbers, text, variables, arithmetic, comparisons, labels, jumps, and loops
 - Functions, recursion, call frames, heap allocation, reads, writes, and bounded runtime safeguards
 - 100 functional fictional speech aliases backed by one canonical registry
 - Food-blogger, influencer, social-media, grill, meat, beer-garden, and political parody vocabulary
-- Browser DOM, events, state, storage, and fetch runtime through explicit host adapters
-- Backend GET/POST/PUT/PATCH/DELETE routes, named route parameters, middleware, request access, JSON/text responses, and body-size limits
-- Interactive playground with console output, AST, bytecode, and sandboxed frontend preview
-- COBOL-first v2 foundation with a GnuCOBOL CLI, JSON CGI API, React/TypeScript client, and dedicated CI
+- Stable v1 browser DOM, events, state, storage, fetch, and backend HTTP profiles
+- Interactive browser playground
+- GnuCOBOL v2 core with shared conformance checks, JSON API transport, and containerized deployment
 
 ## Stable v1 installation
 
@@ -33,44 +32,53 @@ npm test
 node src/cli.js run examples/meme-speech.soeder
 ```
 
-## COBOL-first v2 foundation
+## COBOL-first v2
 
-Requirements:
+Local requirements:
 
 - GnuCOBOL
 - GNU Make
-- Node.js 22 for the browser client
+- Node.js, used only by the canonical alias launcher and browser build
 
-Build and test the COBOL runtime:
-
-```bash
-cd cobol
-make test
-```
-
-Build the React/TypeScript client:
+Build and test the core runtime:
 
 ```bash
-cd frontend
-npm install
-npm run build
+make -C cobol test
+chmod +x cobol/bin/soeder-v2
+printf 'SAG 42.\nSTOPP.\n' | cobol/bin/soeder-v2
 ```
 
-The first vertical slice accepts:
+Run the shared stable-v1/GnuCOBOL conformance gate:
 
-```text
-SAG 42.
-STOPP.
+```bash
+npm run conformance:cobol
 ```
 
-The COBOL CGI API exposes:
+### One-command container deployment
+
+```bash
+docker compose up --build
+```
+
+Open `http://localhost:8080`.
+
+The deployed API exposes:
 
 ```text
 GET  /api/health
 POST /api/execute
 ```
 
-See [`docs/COBOL-V2-ARCHITECTURE.md`](docs/COBOL-V2-ARCHITECTURE.md) for the migration plan and current scope.
+Example request:
+
+```bash
+curl -X POST \
+  -H 'Content-Type: application/json' \
+  --data '{"source":"SAG 42.\nSTOPP.\n"}' \
+  http://localhost:8080/api/execute
+```
+
+The production image is compiled and smoke-tested in CI, including a live health request and real GnuCOBOL execution through `/api/execute`.
 
 ## Stable v1 CLI
 
@@ -82,7 +90,7 @@ soeder ast file.soeder
 soeder tokens file.soeder
 ```
 
-## Stable v1 example
+## Example
 
 ```text
 IDENTIFICATION DIVISION.
@@ -106,9 +114,12 @@ HANDY AUS ESSEN KOMMT.
 Stable v1:
 .soeder source -> JavaScript parser/compiler -> bytecode -> JavaScript VM
 
-COBOL-first v2 migration:
-React + TypeScript -> REST/JSON -> GnuCOBOL API -> COBOL lexer/parser/compiler/VM
+COBOL-first v2 core:
+.soeder source -> canonical alias/header normalization -> GnuCOBOL interpreter
+React UI -> CGI JSON transport -> GnuCOBOL interpreter
 ```
+
+Stable v1 remains the complete reference implementation for the browser and backend language profiles. The GnuCOBOL runtime currently targets the portable language core rather than the DOM and HTTP host-operation instructions.
 
 ## Documentation
 
@@ -116,14 +127,14 @@ React + TypeScript -> REST/JSON -> GnuCOBOL API -> COBOL lexer/parser/compiler/V
 - [`docs/MEME-ALIASES.md`](docs/MEME-ALIASES.md) — canonical speech-alias profile
 - [`docs/TURING-COMPLETENESS.md`](docs/TURING-COMPLETENESS.md) — computational construction
 - [`docs/WEB-PROFILES.md`](docs/WEB-PROFILES.md) — stable v1 browser and backend profiles
-- [`docs/COBOL-V2-ARCHITECTURE.md`](docs/COBOL-V2-ARCHITECTURE.md) — COBOL-first v2 architecture and migration gates
+- [`docs/COBOL-V2-ARCHITECTURE.md`](docs/COBOL-V2-ARCHITECTURE.md) — COBOL-first architecture and migration gates
 - [`SECURITY.md`](SECURITY.md) — security model and vulnerability reporting
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — contribution workflow
 - [`CHANGELOG.md`](CHANGELOG.md) — release history
 
 ## Stability
 
-Version `1.1.0` remains the stable public release. The COBOL-first v2 implementation is an incremental foundation and must not be described as feature-compatible until the shared conformance suite passes.
+Version `1.1.0` remains the stable public release. The GnuCOBOL v2 core is feature-compatible with the portable core subset covered by its dedicated tests and shared conformance gate. Stable v1 remains authoritative for browser and backend host profiles until equivalent GnuCOBOL host adapters exist.
 
 ## License
 
