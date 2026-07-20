@@ -21,6 +21,7 @@
        01 WS-TRIMMED                  PIC X(4096).
        01 WS-OPCODE                   PIC X(16).
        01 WS-OPERAND                  PIC X(4000).
+       01 WS-OPERAND-LENGTH           PIC 9(5) COMP VALUE ZERO.
        01 WS-BYTECODE-OP              PIC 9(4) COMP VALUE ZERO.
           88 BC-PRINT                 VALUE 1.
           88 BC-HALT                  VALUE 255.
@@ -97,10 +98,12 @@
            EVALUATE TRUE
                WHEN BC-PRINT
                    MOVE FUNCTION TRIM(WS-OPERAND) TO WS-OPERAND
-                   IF WS-OPERAND(FUNCTION LENGTH(FUNCTION TRIM(WS-OPERAND)):1)
-                       = "."
-                       MOVE SPACES TO
-                           WS-OPERAND(FUNCTION LENGTH(FUNCTION TRIM(WS-OPERAND)):1)
+                   MOVE FUNCTION LENGTH(FUNCTION TRIM(WS-OPERAND))
+                       TO WS-OPERAND-LENGTH
+                   IF WS-OPERAND-LENGTH > ZERO
+                       IF WS-OPERAND(WS-OPERAND-LENGTH:1) = "."
+                           MOVE SPACE TO WS-OPERAND(WS-OPERAND-LENGTH:1)
+                       END-IF
                    END-IF
                    DISPLAY FUNCTION TRIM(WS-OPERAND)
                WHEN BC-HALT
