@@ -66,14 +66,22 @@ STATUS 201.
 ANTWORTE JSON ERGEBNIS.
 `;
 
-test('backend profile dispatches routes, request data, status, and JSON', async () => {
-  const backend = createBackend(parse(backendSource));
+test('backend profile invokes handlers and dispatches request data, status, and JSON', async () => {
+  const calls = [];
+  const backend = createBackend(parse(backendSource), {
+    call: async (name, context) => {
+      calls.push(name);
+      assert.equal(context.route.handler, name);
+      assert.ok(context.variables);
+    }
+  });
   const status = await backend.dispatch({ method: 'GET', path: '/api/status' });
   assert.equal(status.status, 200);
   assert.equal(status.body, '"bereit"');
   const echo = await backend.dispatch({ method: 'POST', path: '/api/echo', body: { mia: 'san mia' } });
   assert.equal(echo.status, 201);
   assert.deepEqual(JSON.parse(echo.body), { mia: 'san mia' });
+  assert.deepEqual(calls, ['STATUS-HANDLER', 'ECHO-HANDLER']);
   const missing = await backend.dispatch({ method: 'GET', path: '/missing' });
   assert.equal(missing.status, 404);
 });
