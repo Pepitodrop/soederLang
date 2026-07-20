@@ -1,12 +1,34 @@
 # SöderLang
 
 [![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](CHANGELOG.md)
+[![Release](https://img.shields.io/github/v/release/Pepitodrop/soederLang)](https://github.com/Pepitodrop/soederLang/releases/latest)
 [![Node](https://img.shields.io/badge/node-%3E%3D20-green.svg)](package.json)
 [![License](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
 **SöderLang 1.1.0** is a COBOL-inspired, Turing-complete programming language whose source reads like exaggerated fictional political speech associated with Markus Söder. It includes a tokenizer, parser, AST, bytecode compiler, stack virtual machine, CLI, browser runtime, backend HTTP runtime, and interactive playground.
 
 > **Satire notice:** This project is fictional political satire. It is not affiliated with or endorsed by Markus Söder, the Bavarian State Government, the CSU, Bündnis 90/Die Grünen, or any broadcaster. All speech aliases are invented parody constructs, not authentic quotations. Political phrases are exaggerated satire and contain no threats or slurs.
+
+## SöderLang versus JavaScript
+
+SöderLang itself is the language used in `.soeder` source files. Its syntax and program structure are inspired by COBOL, including divisions, sections, declarations, procedural statements, and explicit control flow.
+
+The **reference implementation**—the tokenizer, parser, compiler, virtual machine, CLI, playground, browser adapters, and backend adapters—is written primarily in modern JavaScript so it can run directly on Node.js and in web browsers. GitHub's language chart measures the implementation files stored in this repository, not the language that users write their SöderLang programs in. That is why GitHub currently reports mostly JavaScript.
+
+SöderLang is therefore:
+
+- **COBOL-inspired at the source-language level**
+- **implemented in JavaScript at the compiler/runtime level**
+- **not a COBOL transpiler or a project implemented in COBOL**
+
+A future compiler could be implemented in COBOL, C, Rust, or another host language without changing what SöderLang programs look like.
+
+## Current release status
+
+- Latest stable release: **v1.1.0**
+- GitHub Release: published with a packaged `.tgz` artifact
+- CI: tested on Node.js 20 and 22
+- npm: publication is optional and occurs only when the repository has a valid `NPM_TOKEN`
 
 ## Highlights
 
@@ -21,8 +43,12 @@
 
 ## Install
 
+Clone and run the current source:
+
 ```bash
-npm install
+git clone https://github.com/Pepitodrop/soederLang.git
+cd soederLang
+npm ci
 npm test
 ```
 
@@ -31,6 +57,8 @@ Run an example:
 ```bash
 node src/cli.js run examples/meme-speech.soeder
 ```
+
+The packaged release artifact is also available from the latest GitHub Release.
 
 After npm publication:
 
