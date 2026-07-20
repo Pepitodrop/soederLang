@@ -1,0 +1,8 @@
+html { font-family: system-ui, sans-serif; background: #111827; color: #f9fafb; }
+body { margin: 0; }
+main { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+header, section { margin-bottom: 2rem; }
+textarea { width: 100%; min-height: 320px; box-sizing: border-box; padding: 1rem; font-family: ui-monospace, monospace; font-size: 1rem; background: #030712; color: #f9fafb; border: 1px solid #374151; border-radius: 0.5rem; }
+button { margin-top: 1rem; padding: 0.75rem 1rem; font-weight: 700; cursor: pointer; }
+pre { padding: 1rem; overflow: auto; background: #030712; border: 1px solid #374151; border-radius: 0.5rem; }
+label { display: block; margin-bottom: 0.5rem; font-weight: 700; }
