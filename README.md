@@ -1,49 +1,56 @@
 # SöderLang
 
-**SöderLang** is a planned COBOL-inspired, Turing-complete programming language whose source code reads like an exaggerated fictional speech by Markus Söder.
+**SöderLang** is a COBOL-inspired programming language whose source reads like an exaggerated fictional political speech associated with Markus Söder.
 
-Its primary goal is to support both frontend and backend web development while remaining an intentionally absurd political satire language.
+> **Satire notice:** This project is fictional political satire. It is not affiliated with or endorsed by Markus Söder, the Bavarian State Government, the CSU, or any broadcaster. Language constructs are parody, not authentic quotations.
 
-> **Satire notice:** This project is fictional political satire. It is not affiliated with, endorsed by, or created by Markus Söder, the Bavarian State Government, the CSU, or any broadcaster. Meme phrases and language constructs are parody and must not be treated as authentic quotations.
+## Current status
 
-## Planned features
+The executable core now includes:
 
-- COBOL-inspired divisions and verbose statement structure
-- Frontend browser APIs and DOM manipulation
-- Backend HTTP server and routing support
-- Variables, arithmetic, conditions, loops, functions, recursion, strings, and heap memory
-- At least 50 functional Söder meme aliases
-- A validated virtual machine and command-line interface
-- Turing-complete computation model
-- Browser playground and example full-stack applications
-- Automated tests and GitHub Actions
+- COBOL-inspired divisions and `.soeder` files
+- tokenizer, parser, AST, and bytecode compiler
+- stack-based virtual machine
+- numeric and text variables
+- assignment, arithmetic, comparisons, labels, jumps, and loops
+- console output and explicit termination
+- compile-time variable and label validation
+- stack checks, division-by-zero errors, and instruction limits
+- CLI, examples, tests, and GitHub Actions
 
-## Example direction
+## Run it
+
+```bash
+npm install
+npm test
+node src/cli.js run examples/countdown.soeder
+```
+
+## Example
 
 ```text
 IDENTIFICATION DIVISION.
-PROGRAM-ID. BAYERN-ZAEHLER.
-
+PROGRAM-ID. BAVARIA-COUNTDOWN.
 DATA DIVISION.
 WORKING-STORAGE SECTION.
-01 MASSKRUG PIC 9 VALUE 0.
-
+01 ZAEHLER ZAHL WERT 5.
 PROCEDURE DIVISION.
-HAUPTVERHANDLUNG.
-    DER MARKUS SAGT "Servus aus Bayern".
-    SOLANGE MASSKRUG KLEINER ALS 5
-        MASSKRUG WIRD MASSKRUG PLUS 1
-        BAVARIA ONE MELDET MASSKRUG
-    ENDE-SOLANGE.
-    JETZT WIRD REGIERT.
+RUNDE:
+  SAG ZAEHLER.
+  SUBTRAHIERE 1 VON ZAEHLER.
+  WENN ZAEHLER GROESSER 0 SPRINGE ZU RUNDE.
+  SAG "Mia san fertig".
+  STOPP.
 ```
 
-The final syntax and runtime semantics will be documented as the compiler is implemented.
+## CLI
 
-## Status
+```bash
+soeder run file.soeder
+soeder compile file.soeder
+soeder check file.soeder
+soeder ast file.soeder
+soeder tokens file.soeder
+```
 
-Initial project setup. The compiler, runtime, web APIs, meme vocabulary, examples, tests, and documentation are under development.
-
-## License
-
-The project is intended to be released under the MIT License.
+Next: functions, heap memory, formal Turing-completeness proof, 50+ functional meme aliases, frontend/browser APIs, backend/HTTP APIs, and a playground.
