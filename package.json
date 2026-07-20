@@ -1,6 +1,6 @@
 {
   "name": "soeder-lang",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A COBOL-inspired satirical programming language for frontend and backend web development.",
   "type": "module",
   "bin": {
@@ -12,7 +12,8 @@
   "scripts": {
     "check": "node src/cli.js check examples/hello.soeder",
     "ast": "node src/cli.js ast examples/hello.soeder",
-    "test": "node --test"
+    "test": "node --test",
+    "ci": "npm test && npm run check"
   },
   "engines": {
     "node": ">=20"
