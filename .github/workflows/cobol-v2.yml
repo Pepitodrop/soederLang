@@ -8,6 +8,8 @@ on:
       - 'cobol/**'
       - 'frontend/**'
       - 'src/aliases.js'
+      - 'scripts/check-cobol-conformance.mjs'
+      - 'test/conformance/**'
       - 'Dockerfile'
       - 'docker-compose.yml'
       - 'deploy/**'
@@ -26,10 +28,19 @@ jobs:
       - name: Compile and test COBOL runtime
         working-directory: cobol
         run: make test 2>&1 | tee build.log
-      - name: Test canonical alias launcher
+      - name: Test all canonical aliases through COBOL launcher
         run: |
           chmod +x cobol/bin/soeder-v2
-          printf 'FOODBLOGGER URTEIL 42.\nHANDY AUS ESSEN KOMMT.\n' | cobol/bin/soeder-v2 | grep -F '42'
+          node --input-type=module <<'NODE'
+          import { spawnSync } from 'node:child_process';
+          import { SOEDER_ALIASES } from './src/aliases.js';
+          if (SOEDER_ALIASES.length !== 100) throw new Error(`expected 100 aliases, got ${SOEDER_ALIASES.length}`);
+          const smoke = 'FOODBLOGGER URTEIL 42.\nHANDY AUS ESSEN KOMMT.\n';
+          const result = spawnSync('cobol/bin/soeder-v2', [], { input: smoke, encoding: 'utf8' });
+          if (result.status !== 0 || !result.stdout.includes('42')) throw new Error(result.stderr || 'alias execution failed');
+          NODE
+      - name: Compare v1 and GnuCOBOL conformance output
+        run: npm run conformance:cobol
       - name: Upload COBOL diagnostics
         if: always()
         uses: actions/upload-artifact@v4
