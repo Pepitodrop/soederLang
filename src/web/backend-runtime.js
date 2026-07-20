@@ -5,8 +5,9 @@ function valueOf(expression, variables) {
 }
 
 export class BackendRuntime {
-  constructor(program) {
+  constructor(program, options = {}) {
     this.program = program;
+    this.call = options.call ?? (async () => {});
     this.initialVariables = Object.fromEntries(program.data.map((item) => [item.name, item.value]));
     this.routes = this.buildRoutes(program.backend);
   }
@@ -33,6 +34,9 @@ export class BackendRuntime {
     if (!route) return { status: 404, headers: { 'content-type': 'application/json' }, body: JSON.stringify({ error: 'Nicht gefunden' }) };
 
     const variables = { ...this.initialVariables };
+    const context = { request, route, variables, runtime: this };
+    await this.call(route.handler, context);
+
     let status = 200;
     let response = null;
     for (const statement of route.statements) {
@@ -58,26 +62,31 @@ export class BackendRuntime {
 
   createNodeHandler() {
     return async (req, res) => {
-      const chunks = [];
-      for await (const chunk of req) chunks.push(chunk);
-      const rawBody = Buffer.concat(chunks).toString('utf8');
-      let body = rawBody;
-      if ((req.headers['content-type'] ?? '').includes('application/json') && rawBody) body = JSON.parse(rawBody);
-      const url = new URL(req.url, 'http://soeder.local');
-      const result = await this.dispatch({
-        method: req.method,
-        url: req.url,
-        path: url.pathname,
-        query: Object.fromEntries(url.searchParams),
-        params: {},
-        body
-      });
-      res.writeHead(result.status, result.headers);
-      res.end(result.body);
+      try {
+        const chunks = [];
+        for await (const chunk of req) chunks.push(chunk);
+        const rawBody = Buffer.concat(chunks).toString('utf8');
+        let body = rawBody;
+        if ((req.headers['content-type'] ?? '').includes('application/json') && rawBody) body = JSON.parse(rawBody);
+        const url = new URL(req.url, 'http://soeder.local');
+        const result = await this.dispatch({
+          method: req.method,
+          url: req.url,
+          path: url.pathname,
+          query: Object.fromEntries(url.searchParams),
+          params: {},
+          body
+        });
+        res.writeHead(result.status, result.headers);
+        res.end(result.body);
+      } catch (error) {
+        res.writeHead(500, { 'content-type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ error: error.message }));
+      }
     };
   }
 }
 
-export function createBackend(program) {
-  return new BackendRuntime(program);
+export function createBackend(program, options) {
+  return new BackendRuntime(program, options);
 }
